@@ -1,12 +1,38 @@
-import { NextResponse } from "next/server";
-import { generateLesson } from "@/services/agents/master";
+import { NextRequest, NextResponse } from "next/server";
+import { masterAgent } from "@/agents/master";
 
-export async function POST(req: Request) {
-  const { prompt } = await req.json();
+export async function POST(req: NextRequest) {
+  try {
+    const { prompt } = await req.json();
 
-  const response = await generateLesson(prompt);
+    if (!prompt || prompt.trim() === "") {
+      return NextResponse.json(
+        {
+          error: "Prompt is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
-  return NextResponse.json({
-    content: response,
-  });
+    const response = await masterAgent(prompt);
+
+    return NextResponse.json({
+      success: true,
+      content: response,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to generate content",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }

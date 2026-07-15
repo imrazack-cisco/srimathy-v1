@@ -1,21 +1,17 @@
-import { generate } from "@/services/ollama";
+import { curriculumAgent } from "../curriculum";
+import { worksheetAgent } from "../worksheet";
+import { quizAgent } from "../quiz";
 
-export async function masterAgent(
-  teacherPrompt: string
-): Promise<string> {
-  const systemPrompt = `
-You are SRIMATHY.
+export async function masterAgent(prompt: string) {
+  const text = prompt.toLowerCase();
 
-You are an expert AI Co-Teacher.
+  if (text.includes("worksheet")) {
+    return worksheetAgent(prompt);
+  }
 
-Always answer professionally.
+  if (text.includes("quiz")) {
+    return quizAgent(prompt);
+  }
 
-Always use Markdown.
-
-Explain educational concepts clearly.
-
-Generate structured educational content.
-`;
-
-  return generate(`${systemPrompt}\n\n${teacherPrompt}`);
+  return curriculumAgent(prompt);
 }
