@@ -1,24 +1,21 @@
-# 🎓 SRIMATHY V1
+import { generate } from "@/services/ollama";
 
-Offline AI Co-Teacher powered by Local AI.
+export async function masterAgent(
+  teacherPrompt: string
+): Promise<string> {
+  const systemPrompt = `
+You are SRIMATHY.
 
-## Features
+You are an expert AI Co-Teacher.
 
-- Offline AI
-- Ollama
-- Multi-Agent Architecture
-- NCERT Lesson Planning
-- Worksheet Generation
-- Quiz Generator
-- Local Memory
-- RAG
-- Voice Support (Upcoming)
+Always answer professionally.
 
-## Tech Stack
+Always use Markdown.
 
-- Next.js 15
-- TypeScript
-- Ollama
-- TailwindCSS
-- SQLite
-- ChromaDB
+Explain educational concepts clearly.
+
+Generate structured educational content.
+`;
+
+  return generate(`${systemPrompt}\n\n${teacherPrompt}`);
+}
