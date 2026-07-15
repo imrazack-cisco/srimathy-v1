@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { masterAgent } from "@/agents/master";
+import { generateProject } from "@/agents/master";
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
     if (!prompt || prompt.trim() === "") {
       return NextResponse.json(
         {
+          success: false,
           error: "Prompt is required",
         },
         {
@@ -16,19 +17,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await masterAgent(prompt);
+    const project = await generateProject(prompt);
 
-    return NextResponse.json({
-      success: true,
-      content: response,
-    });
+    return NextResponse.json(project);
   } catch (error) {
-    console.error(error);
+    console.error("Project API Error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to generate content",
+        error: "Failed to generate project.",
       },
       {
         status: 500,

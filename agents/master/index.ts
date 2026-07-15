@@ -1,17 +1,10 @@
-import { curriculumAgent } from "../curriculum";
-import { worksheetAgent } from "../worksheet";
-import { quizAgent } from "../quiz";
+import { generateCurriculum } from "@/agents/curriculum";
 
-export async function masterAgent(prompt: string) {
-  const text = prompt.toLowerCase();
+export async function generateProject(prompt: string) {
+  const lesson = await generateCurriculum(prompt);
 
-  if (text.includes("worksheet")) {
-    return worksheetAgent(prompt);
-  }
-
-  if (text.includes("quiz")) {
-    return quizAgent(prompt);
-  }
-
-  return curriculumAgent(prompt);
+  return {
+    title: prompt,
+    content: lesson,
+  };
 }
