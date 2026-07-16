@@ -4,11 +4,13 @@ import { useState } from "react";
 
 interface PromptBoxProps {
   onLessonGenerated: (lesson: string) => void;
+  onWorksheetGenerated?:(worksheet:string)=>void;
 }
 
 export default function PromptBox({
   onLessonGenerated,
-}: PromptBoxProps) {
+  onWorksheetGenerated,
+}: PromptBoxProps): import("react").JSX.Element {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,29 +20,48 @@ export default function PromptBox({
     setLoading(true);
 
     try {
-      const res = await fetch("/api/project", {
+      const res = await fetch("/api/agent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt,
+          agent: "curriculum",
+          prompt: prompt,
         }),
       });
 
       const data = await res.json();
 
-      if (data.content) {
-        onLessonGenerated(data.content);
-
-        // Clear prompt after successful generation
-        setPrompt("");
-      } else {
-        alert(data.error || "Generation failed.");
+      if (!res.ok) {
+        throw new Error(data.error || "Generation failed.");
       }
+
+      // Curriculum Agent returns:
+      // {
+      //   title: "...",
+      //   content: "..."
+      // }
+
+      onLessonGenerated(data.content);
+
+      if (
+  onWorksheetGenerated
+) {
+  console.log(
+    "Worksheet Agent ready."
+  );
+}
+
+      setPrompt("");
     } catch (err) {
       console.error(err);
-      alert("Unable to generate lesson.");
+
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Unable to generate lesson."
+      );
     } finally {
       setLoading(false);
     }
@@ -70,7 +91,7 @@ export default function PromptBox({
 • Introduction to Variables
 • Newton's Laws
 • Photosynthesis
-• World War II
+• Cisco Networking Basics
 `}
         value={prompt}
         disabled={loading}
@@ -100,12 +121,12 @@ export default function PromptBox({
           <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
         )}
 
-        {loading ? "Generating Lesson..." : "Generate"}
+        {loading ? "Generating Lesson..." : "Generate Lesson"}
       </button>
 
       {loading && (
-        <p className="mt-4 text-sm text-cyan-300 animate-pulse">
-          🤖 SRIMATHY is preparing your lesson...
+        <p className="mt-4 animate-pulse text-sm text-cyan-300">
+          🤖 SRIMATHY Curriculum Agent is creating your lesson...
         </p>
       )}
     </div>

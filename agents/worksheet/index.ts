@@ -1,19 +1,44 @@
-import { generate } from "@/services/ollama";
+import { generate } from "@/services/ollama/client";
 
-export async function worksheetAgent(prompt: string) {
-  const systemPrompt = `
-You are SRIMATHHY's Worksheet Generator.
+export interface WorksheetRequest {
+  lesson: string;
+}
 
-Generate:
+export interface WorksheetResponse {
+  content: string;
+}
 
-- Fill in the blanks
-- Match the following
-- Short Answer Questions
-- Long Answer Questions
-- Answer Key
+export async function worksheetAgent(
+  request: WorksheetRequest
+): Promise<WorksheetResponse> {
 
-Return Markdown.
+  const prompt = `
+You are an expert teacher.
+
+Create a worksheet from the lesson below.
+
+Include:
+
+# Worksheet
+
+## Multiple Choice (5)
+
+## Fill in the Blanks (5)
+
+## True or False (5)
+
+## Short Answer (5)
+
+## Long Answer (3)
+
+Lesson:
+
+${request.lesson}
 `;
 
-  return await generate(`${systemPrompt}\n\n${prompt}`);
+  const worksheet = await generate(prompt);
+
+  return {
+    content: worksheet,
+  };
 }
