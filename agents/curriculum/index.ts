@@ -1,44 +1,31 @@
 import { generate } from "@/services/ollama/client";
 import { curriculumPrompt } from "@/lib/prompts";
 
-export async function generateCurriculum(topic: string) {
-  const prompt = `
+export interface LessonRequest {
+  topic: string;
+}
+
+export interface LessonResponse {
+  title: string;
+  content: string;
+}
+
+export async function curriculumAgent(
+  request: LessonRequest
+): Promise<LessonResponse> {
+
+  const fullPrompt = `
 ${curriculumPrompt}
 
-Create a complete lesson for:
+Teacher Request:
 
-${topic}
-
-Return the lesson in this exact format:
-
-# Lesson Title
-
-## Learning Objectives
-
-- Objective 1
-- Objective 2
-- Objective 3
-
-## Explanation
-
-Explain the concept clearly.
-
-## Examples
-
-Provide at least two examples.
-
-## Activities
-
-Suggest two classroom activities.
-
-## Homework
-
-Give five homework questions.
-
-## Summary
-
-Summarize the lesson.
+${request.topic}
 `;
 
-  return await generate(prompt);
+  const lesson = await generate(fullPrompt);
+
+  return {
+    title: request.topic,
+    content: lesson,
+  };
 }
