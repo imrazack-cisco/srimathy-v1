@@ -1,44 +1,48 @@
 import { generate } from "@/services/ollama/client";
 
-export interface WorksheetRequest {
-  lesson: string;
-}
-
 export interface WorksheetResponse {
+  title: string;
   content: string;
 }
 
-export async function worksheetAgent(
-  request: WorksheetRequest
+export async function generateWorksheet(
+  topic: string
 ): Promise<WorksheetResponse> {
-
   const prompt = `
-You are an expert teacher.
+You are an expert school worksheet designer.
 
-Create a worksheet from the lesson below.
+Create a worksheet for:
+
+${topic}
+
+Generate the worksheet in Markdown.
 
 Include:
 
 # Worksheet
 
-## Multiple Choice (5)
+## Fill in the Blanks
+(5 Questions)
 
-## Fill in the Blanks (5)
+## Multiple Choice
+(5 Questions)
 
-## True or False (5)
+## True / False
+(5 Questions)
 
-## Short Answer (5)
+## Short Answer
+(5 Questions)
 
-## Long Answer (3)
+## Challenge Question
+(1 Question)
 
-Lesson:
-
-${request.lesson}
+Return ONLY Markdown.
 `;
 
   const worksheet = await generate(prompt);
 
   return {
+    title: `${topic} Worksheet`,
     content: worksheet,
   };
 }

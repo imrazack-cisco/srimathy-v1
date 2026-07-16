@@ -1,30 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { routeAgent } from "@/lib/router";
+import { masterAgent } from "@/agents/master";
 
 export async function POST(req: NextRequest) {
-
   try {
+    const { prompt } = await req.json();
 
-    const body = await req.json();
+    if (!prompt?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Prompt required",
+        },
+        { status: 400 }
+      );
+    }
 
-    const result = await routeAgent(body);
+    const result = await masterAgent({
+      topic: prompt,
+    });
 
     return NextResponse.json(result);
-
-  } catch (error) {
-
-    console.error(error);
+  } catch (err) {
+    console.error(err);
 
     return NextResponse.json(
       {
-        error: "Agent execution failed",
+        error: "Generation failed",
       },
       {
         status: 500,
       }
     );
-
   }
-
 }

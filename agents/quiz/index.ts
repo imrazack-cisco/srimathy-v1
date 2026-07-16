@@ -1,19 +1,37 @@
-import { generate } from "@/services/ollama";
+import { generate } from "@/services/ollama/client";
 
-export async function quizAgent(prompt: string) {
-  const systemPrompt = `
-You are SRIMATHY's Quiz Generator.
+interface QuizRequest {
+  topic: string;
+}
 
-Generate
+export async function quizAgent({
+  topic,
+}: QuizRequest): Promise<string> {
 
-- 10 Multiple Choice Questions
-- 5 True/False Questions
-- 3 HOTS Questions
+  const prompt = `
+You are an expert teacher.
 
-Include an Answer Key.
+Generate a short quiz for:
+
+${topic}
 
 Return Markdown.
+
+Include:
+
+# Quiz
+
+## Multiple Choice
+5 questions
+
+## True or False
+3 questions
+
+## Short Answer
+3 questions
+
+Include the answer key at the end.
 `;
 
-  return await generate(`${systemPrompt}\n\n${prompt}`);
+  return generate(prompt);
 }
