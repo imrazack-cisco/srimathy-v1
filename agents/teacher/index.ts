@@ -1,38 +1,26 @@
-import { generate } from "@/services/ollama/client";
+import { AI } from "@/ai";
+import { teacherPrompt } from "@/lib/prompts";
 
-interface TeacherRequest {
+export interface TeacherRequest {
   topic: string;
 }
 
-export async function teacherAgent({
-  topic,
-}: TeacherRequest): Promise<string> {
+export interface TeacherResponse {
+  content: string;
+}
 
-  const prompt = `
-You are an experienced school teacher.
+export async function teacherAgent(
+  request: TeacherRequest
+): Promise<TeacherResponse> {
 
-Prepare teacher notes for:
+  console.log("👨‍🏫 Teacher Agent");
 
-${topic}
+  const result = await AI.generate(
+    teacherPrompt,
+    request.topic
+  );
 
-Return Markdown.
-
-Include:
-
-# Teacher Notes
-
-## Teaching Tips
-
-## Common Student Mistakes
-
-## Bloom's Taxonomy
-
-## Classroom Activities
-
-## Homework Ideas
-
-Keep it practical.
-`;
-
-  return generate(prompt);
+  return {
+    content: result.response,
+  };
 }

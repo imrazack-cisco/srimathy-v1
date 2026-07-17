@@ -1,37 +1,26 @@
-import { generate } from "@/services/ollama/client";
+import { AI } from "@/ai";
+import { quizPrompt } from "@/lib/prompts";
 
-interface QuizRequest {
+export interface QuizRequest {
   topic: string;
 }
 
-export async function quizAgent({
-  topic,
-}: QuizRequest): Promise<string> {
+export interface QuizResponse {
+  content: string;
+}
 
-  const prompt = `
-You are an expert teacher.
+export async function quizAgent(
+  request: QuizRequest
+): Promise<QuizResponse> {
 
-Generate a short quiz for:
+  console.log("❓ Quiz Agent");
 
-${topic}
+  const result = await AI.generate(
+    quizPrompt,
+    request.topic
+  );
 
-Return Markdown.
-
-Include:
-
-# Quiz
-
-## Multiple Choice
-5 questions
-
-## True or False
-3 questions
-
-## Short Answer
-3 questions
-
-Include the answer key at the end.
-`;
-
-  return generate(prompt);
+  return {
+    content: result.response,
+  };
 }

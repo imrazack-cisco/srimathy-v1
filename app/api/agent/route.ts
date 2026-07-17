@@ -5,30 +5,24 @@ export async function POST(req: NextRequest) {
   try {
     const { prompt } = await req.json();
 
-    if (!prompt?.trim()) {
-      return NextResponse.json(
-        {
-          error: "Prompt required",
-        },
-        { status: 400 }
-      );
-    }
-
     const result = await masterAgent({
       topic: prompt,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      success: true,
+      ...result,
+    });
   } catch (err) {
+    console.error("FULL ERROR");
     console.error(err);
 
     return NextResponse.json(
       {
-        error: "Generation failed",
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

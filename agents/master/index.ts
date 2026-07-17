@@ -11,7 +11,7 @@ export async function masterAgent({
   topic,
 }: MasterRequest) {
 
-  console.time("Master Agent");
+  console.time("🚀 Master Agent");
 
   const [
     lesson,
@@ -25,7 +25,7 @@ export async function masterAgent({
     teacherAgent({ topic }),
   ]);
 
-  console.timeEnd("Master Agent");
+  console.timeEnd("🚀 Master Agent");
 
   return {
     lesson,

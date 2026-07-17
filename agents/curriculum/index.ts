@@ -1,4 +1,4 @@
-import { generate } from "@/services/ollama/client";
+import { AI } from "@/ai";
 import { curriculumPrompt } from "@/lib/prompts";
 
 export interface LessonRequest {
@@ -14,18 +14,15 @@ export async function curriculumAgent(
   request: LessonRequest
 ): Promise<LessonResponse> {
 
-  const fullPrompt = `
-${curriculumPrompt}
+  console.log("📚 Curriculum Agent");
 
-Teacher Request:
-
-${request.topic}
-`;
-
-  const lesson = await generate(fullPrompt);
+  const result = await AI.generate(
+    curriculumPrompt,
+    request.topic
+  );
 
   return {
     title: request.topic,
-    content: lesson,
+    content: result.response,
   };
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateProject } from "@/agents/master";
+import { masterAgent } from "@/agents/master";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,19 +9,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Prompt is required",
+          error: "Prompt is required.",
         },
-        {
-          status: 400,
-        }
+        { status: 400 }
       );
     }
 
-    const project = await generateProject(prompt);
+    console.log("🚀 Starting SRIMATHY Master Agent...");
+    console.log("Topic:", prompt);
 
-    return NextResponse.json(project);
+    const project = await masterAgent({
+      topic: prompt,
+    });
+
+    console.log("✅ Project generated successfully.");
+
+    return NextResponse.json({
+      success: true,
+      ...project,
+    });
+
   } catch (error) {
-    console.error("Project API Error:", error);
+    console.error("❌ Project API Error:");
+
+    if (error instanceof Error) {
+      console.error(error.message);
+      console.error(error.stack);
+    } else {
+      console.error(error);
+    }
 
     return NextResponse.json(
       {
@@ -34,3 +50,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
