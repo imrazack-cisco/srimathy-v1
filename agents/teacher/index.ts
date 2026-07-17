@@ -15,12 +15,12 @@ export async function teacherAgent(
 
   console.log("👨‍🏫 Teacher Agent");
 
-  const result = await AI.generate(
+  const content = await AI.generate(
     teacherPrompt,
     request.topic
   );
 
   return {
-    content: result.response,
+    content,
   };
 }

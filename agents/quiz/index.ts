@@ -15,12 +15,12 @@ export async function quizAgent(
 
   console.log("❓ Quiz Agent");
 
-  const result = await AI.generate(
+  const content = await AI.generate(
     quizPrompt,
     request.topic
   );
 
   return {
-    content: result.response,
+    content,
   };
 }

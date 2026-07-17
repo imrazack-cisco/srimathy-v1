@@ -3,29 +3,57 @@ import { worksheetAgent } from "@/agents/worksheet";
 import { quizAgent } from "@/agents/quiz";
 import { teacherAgent } from "@/agents/teacher";
 
-interface MasterRequest {
+export interface MasterRequest {
   topic: string;
 }
 
-export async function masterAgent({
-  topic,
-}: MasterRequest) {
+export interface MasterResponse {
+  lesson: {
+    title: string;
+    content: string;
+  };
+  worksheet: {
+    content: string;
+  };
+  quiz: {
+    content: string;
+  };
+  teacher: {
+    content: string;
+  };
+}
 
-  console.time("🚀 Master Agent");
+export async function masterAgent(
+  request: MasterRequest
+): Promise<MasterResponse> {
 
-  const [
-    lesson,
-    worksheet,
-    quiz,
-    teacher,
-  ] = await Promise.all([
-    curriculumAgent({ topic }),
-    worksheetAgent({ topic }),
-    quizAgent({ topic }),
-    teacherAgent({ topic }),
-  ]);
+  console.log("\n======================================");
+  console.log("🚀 SRIMATHY MASTER AGENT");
+  console.log("======================================");
+  console.log("📚 Topic:", request.topic);
 
-  console.timeEnd("🚀 Master Agent");
+  const lesson = await curriculumAgent({
+    topic: request.topic,
+  });
+
+  const worksheet = await worksheetAgent({
+    topic: request.topic,
+  });
+
+  const quiz = await quizAgent({
+    topic: request.topic,
+  });
+
+  const teacher = await teacherAgent({
+    topic: request.topic,
+  });
+
+  console.log("\n=========== OUTPUT SIZES ===========");
+  console.log("Lesson     :", lesson.content.length);
+  console.log("Worksheet  :", worksheet.content.length);
+  console.log("Quiz       :", quiz.content.length);
+  console.log("Teacher    :", teacher.content.length);
+  console.log("====================================\n");
 
   return {
     lesson,

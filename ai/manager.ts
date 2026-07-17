@@ -1,100 +1,45 @@
-import { AI_CONFIG } from "./config";
-import { CiscoProvider } from "./providers/cisco";
 import { OllamaProvider } from "./providers/ollama";
-import type { AIProvider } from "./types";
-
-export interface AIResponse {
-  provider: string;
-  response: string;
-  latency: number;
-  fallback: boolean;
-}
 
 class AIManager {
-
-  private async execute(
-    provider: AIProvider,
-    system: string,
-    prompt: string,
-    fallback = false
-  ): Promise<AIResponse> {
-
-    const start = Date.now();
-
-    const response = await provider.generate(system, prompt);
-
-    return {
-      provider: provider.name,
-      response,
-      latency: Date.now() - start,
-      fallback
-    };
-  }
 
   async generate(
     system: string,
     prompt: string
-  ): Promise<AIResponse> {
+  ): Promise<string> {
 
-    switch (AI_CONFIG.provider.toLowerCase()) {
+    console.log("\n====================================");
+    console.log("🦙 SRIMATHY AI ENGINE");
+    console.log("====================================");
 
-      case "ollama":
-        console.log("🟢 Provider = Ollama");
+    const start = Date.now();
 
-        return this.execute(
-          OllamaProvider,
-          system,
-          prompt
-        );
+    try {
 
-      case "cisco":
-        console.log("🌐 Provider = Cisco");
+      const response = await OllamaProvider.generate(
+        system,
+        prompt
+      );
 
-        return this.execute(
-          CiscoProvider,
-          system,
-          prompt
-        );
+      const latency = Date.now() - start;
 
-      case "auto":
+      console.log("✅ Generation Successful");
+      console.log("Model      :", process.env.OLLAMA_MODEL ?? "gemma3:4b");
+      console.log("Latency    :", latency, "ms");
+      console.log("====================================\n");
 
-      default:
+      return response;
 
-        console.log("⚡ AUTO MODE");
+    } catch (error) {
 
-        try {
+      console.error("❌ AI Generation Failed");
+      console.error(error);
 
-          if (await CiscoProvider.health()) {
+      throw error;
 
-            console.log("Using Cisco CIRCUIT");
-
-            return await this.execute(
-              CiscoProvider,
-              system,
-              prompt
-            );
-
-          }
-
-        } catch (err) {
-
-          console.warn(
-            "Cisco health check failed:",
-            err
-          );
-
-        }
-
-        console.log("Falling back to Ollama");
-
-        return this.execute(
-          OllamaProvider,
-          system,
-          prompt,
-          true
-        );
     }
+
   }
+
 }
 
 export const AI = new AIManager();

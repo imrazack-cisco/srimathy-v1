@@ -16,13 +16,13 @@ export async function curriculumAgent(
 
   console.log("📚 Curriculum Agent");
 
-  const result = await AI.generate(
+  const content = await AI.generate(
     curriculumPrompt,
     request.topic
   );
 
   return {
     title: request.topic,
-    content: result.response,
+    content,
   };
 }

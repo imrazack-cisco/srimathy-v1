@@ -15,12 +15,12 @@ export async function worksheetAgent(
 
   console.log("📝 Worksheet Agent");
 
-  const result = await AI.generate(
+  const content = await AI.generate(
     worksheetPrompt,
     request.topic
   );
 
   return {
-    content: result.response,
+    content,
   };
 }

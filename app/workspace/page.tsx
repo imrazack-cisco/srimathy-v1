@@ -10,8 +10,9 @@ import WorkspaceTabs from "@/components/workspace/WorkspaceTabs";
 export default function WorkspacePage() {
   const [lesson, setLesson] = useState("");
   const [worksheet, setWorksheet] = useState("");
+  const [quiz, setQuiz] = useState("");
+  const [teacher, setTeacher] = useState("");
 
-  // NEW
   const [activeTab, setActiveTab] = useState("Lesson");
 
   return (
@@ -29,23 +30,19 @@ export default function WorkspacePage() {
           What would you like to create today?
         </p>
 
-        {/* Prompt */}
-
         <div className="mt-10">
           <PromptBox
             onLessonGenerated={setLesson}
             onWorksheetGenerated={setWorksheet}
+            onQuizGenerated={setQuiz}
+            onTeacherGenerated={setTeacher}
           />
         </div>
-
-        {/* Workspace Tabs */}
 
         <WorkspaceTabs
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-
-        {/* Lesson */}
 
         {activeTab === "Lesson" && lesson && (
           <div className="mt-8">
@@ -53,11 +50,21 @@ export default function WorkspacePage() {
           </div>
         )}
 
-        {/* Worksheet */}
-
         {activeTab === "Worksheet" && worksheet && (
           <div className="mt-8">
             <MarkdownViewer markdown={worksheet} />
+          </div>
+        )}
+
+        {activeTab === "Quiz" && quiz && (
+          <div className="mt-8">
+            <MarkdownViewer markdown={quiz} />
+          </div>
+        )}
+
+        {activeTab === "Teacher Notes" && teacher && (
+          <div className="mt-8">
+            <MarkdownViewer markdown={teacher} />
           </div>
         )}
 

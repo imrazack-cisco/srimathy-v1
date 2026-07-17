@@ -1,3 +1,2 @@
-export * from "./manager";
-export * from "./config";
-export * from "./types";
+export { AI } from "./manager";
+export type { AIProvider } from "./types";
