@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { masterAgent } from "@/agents/master";
+import { runtimeMetrics } from "@/app/lib/runtimeMetrics";
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,10 +26,14 @@ export async function POST(req: NextRequest) {
     console.log("📩 Incoming Prompt");
     console.log("======================================");
     console.log(prompt);
-
+    
+    const start = Date.now();
     const result = await masterAgent({
       topic: prompt,
     });
+
+    const responseTime = Date.now() - start;
+    runtimeMetrics.increment(prompt, responseTime);
 
     console.log("\n======================================");
     console.log("✅ MASTER RESULT");
@@ -72,3 +77,5 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+

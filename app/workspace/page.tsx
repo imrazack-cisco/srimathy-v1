@@ -1,5 +1,12 @@
 "use client";
 
+import DashboardHeader from "@/components/ai/DashboardHeader";
+import RuntimeCard from "@/components/ai/RuntimeCard";
+import HealthCard from "@/components/ai/HealthCard";
+import MetricsCard from "@/components/ai/MetricsCard";
+
+
+
 import { useState } from "react";
 
 import Sidebar from "@/components/sidebar/Sidebar";
@@ -22,13 +29,22 @@ export default function WorkspacePage() {
 
       <section className="flex-1 p-12">
 
-        <h1 className="text-5xl font-bold">
-          Welcome back 👋
-        </h1>
+        <DashboardHeader />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
 
-        <p className="mt-3 text-slate-400">
-          What would you like to create today?
-        </p>
+    <RuntimeCard />
+
+    <HealthCard />
+
+</div>
+
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+
+    <MetricsCard />
+
+</div>
+
+
 
         <div className="mt-10">
           <PromptBox
