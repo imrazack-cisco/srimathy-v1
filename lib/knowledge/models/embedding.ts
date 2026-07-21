@@ -1,7 +1,13 @@
-import { KnowledgeDocument } from "../models/document";
+export interface KnowledgeEmbedding {
 
-export interface BaseLoader {
+    id: string;
 
-    load(filePath: string): Promise<KnowledgeDocument[]>;
+    chunkId: string;
+
+    vector: number[];
+
+    dimension: number;
+
+    createdAt: string;
 
 }

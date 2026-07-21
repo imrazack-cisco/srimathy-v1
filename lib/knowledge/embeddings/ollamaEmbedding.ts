@@ -1,17 +1,38 @@
-export interface DocumentChunk {
+import ollama from "ollama";
 
-    id: string;
+import { KnowledgeChunk } from "../models/chunk";
+import { KnowledgeEmbedding } from "../models/embedding";
 
-    text: string;
+export class OllamaEmbeddingService {
 
-    source: string;
+    private readonly MODEL = "nomic-embed-text";
 
-    page: number;
+    async embed(
+        chunk: KnowledgeChunk
+    ): Promise<KnowledgeEmbedding> {
 
-    chunkNumber: number;
+        const response = await ollama.embeddings({
 
-    subject?: string;
+            model: this.MODEL,
 
-    grade?: string;
+            prompt: chunk.text
+
+        });
+
+        return {
+
+            id: `${chunk.id}-embedding`,
+
+            chunkId: chunk.id,
+
+            vector: response.embedding,
+
+            dimension: response.embedding.length,
+
+            createdAt: new Date().toISOString()
+
+        };
+
+    }
 
 }

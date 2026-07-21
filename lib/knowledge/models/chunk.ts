@@ -1,7 +1,21 @@
-import { KnowledgeDocument } from "../models/document";
+export interface KnowledgeChunk {
 
-export interface BaseLoader {
+    id: string;
 
-    load(filePath: string): Promise<KnowledgeDocument[]>;
+    documentId: string;
+
+    chunkIndex: number;
+
+    text: string;
+
+    metadata: {
+
+        source: string;
+
+        pageCount?: number;
+
+        chunkSize: number;
+
+    };
 
 }
