@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "rag:test": "tsx scripts/test-loader.ts",
     "lint": "eslint"
   },
   "dependencies": {
@@ -15,7 +16,7 @@
     "lucide-react": "^1.25.0",
     "next": "16.2.10",
     "ollama": "^0.6.3",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse": "1.1.1",
     "pino": "^10.3.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -27,11 +28,13 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
+    "tsx": "^4.23.1",
     "typescript": "^5"
   }
 }
