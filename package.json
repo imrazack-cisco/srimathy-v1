@@ -3,12 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "rag:test": "tsx scripts/test-loader.ts",
-    "lint": "eslint"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "rag:test": "tsx scripts/test-loader.ts",
+  "lint": "eslint .",
+  "split:test": "tsx scripts/test-splitter.ts",
+  "embed:test": "tsx scripts/test-embedding.ts",
+  "vector:test": "tsx scripts/test-vectorstore.ts",
+  "vector:reset": "tsx scripts/reset-vectorstore.ts",
+  "vector:insert": "tsx scripts/test-vector-insert.ts",
+  "vector:search": "tsx scripts/test-vector-search.ts",
+  "knowledge:ingest": "tsx scripts/ingest-knowledge.ts"
+
+},
   "dependencies": {
     "@langchain/textsplitters": "^1.0.1",
     "@tailwindcss/typography": "^0.5.20",
