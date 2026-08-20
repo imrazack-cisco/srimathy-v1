@@ -1,0 +1,178 @@
+import { AIProvider } from "../types";
+import { AI_CONFIG } from "../config";
+
+export interface CircuitMetrics {
+  model: string;
+  latencyMs: number;
+}
+
+export const CircuitProvider:
+  AIProvider & {
+    lastMetrics?: CircuitMetrics;
+  } = {
+
+  name: "circuit",
+
+  lastMetrics: undefined,
+
+  async health() {
+    return Boolean(
+      process.env.CIRCUIT_URL &&
+      process.env.CIRCUIT_API_KEY &&
+      process.env.CIRCUIT_APP_KEY &&
+      process.env.CIRCUIT_MODEL
+    );
+  },
+
+  async generate(
+    system,
+    prompt
+  ) {
+
+    const url =
+      process.env.CIRCUIT_URL ??
+      AI_CONFIG.circuit.endpoint;
+
+    const apiKey =
+      process.env.CIRCUIT_API_KEY;
+
+    const appKey =
+      process.env.CIRCUIT_APP_KEY;
+
+    const model =
+      process.env.CIRCUIT_MODEL ??
+      AI_CONFIG.circuit.model;
+
+    if (
+      !url ||
+      !apiKey ||
+      !appKey ||
+      !model
+    ) {
+      throw new Error(
+        "CIRCUIT configuration is incomplete. " +
+        "Check CIRCUIT_URL, CIRCUIT_API_KEY, " +
+        "CIRCUIT_APP_KEY and CIRCUIT_MODEL."
+      );
+    }
+
+    const start =
+      performance.now();
+
+    const response =
+      await fetch(
+        url,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            "Accept":
+              "application/json",
+
+            "api-key":
+              apiKey,
+          },
+
+          body: JSON.stringify({
+
+            messages: [
+              {
+                role: "system",
+                content: system,
+              },
+
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+
+            user: JSON.stringify({
+              appkey: appKey,
+            }),
+
+            stop: [
+              "<|im_end|>"
+            ],
+          }),
+        }
+      );
+
+    const latencyMs =
+      Math.round(
+        performance.now() - start
+      );
+
+    const raw =
+      await response.text();
+
+    let data: any;
+
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = {
+        raw,
+      };
+    }
+
+    if (!response.ok) {
+
+      console.error(
+        "======================================"
+      );
+
+      console.error(
+        "❌ CIRCUIT API ERROR"
+      );
+
+      console.error(
+        "HTTP Status:",
+        response.status
+      );
+
+      console.error(
+        JSON.stringify(
+          data,
+          null,
+          2
+        )
+      );
+
+      console.error(
+        "======================================"
+      );
+
+      const faultString =
+        data?.fault?.faultstring ??
+        data?.error?.message ??
+        data?.message ??
+        `HTTP ${response.status}`;
+
+      throw new Error(
+        `CIRCUIT request failed: ${faultString}`
+      );
+    }
+
+    const content =
+      data?.choices?.[0]?.message?.content ??
+      data?.choices?.[0]?.text ??
+      "";
+
+    if (!content) {
+      throw new Error(
+        "CIRCUIT returned no response content."
+      );
+    }
+
+    this.lastMetrics = {
+      model,
+      latencyMs,
+    };
+
+    return content;
+  },
+};

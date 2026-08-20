@@ -1,297 +1,412 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ChromaClient } from "chromadb";
 import ollama from "ollama";
 
-const CHROMA_HOST = "localhost";
-const CHROMA_PORT = 8000;
+import {
+    retrieveKnowledge,
+} from "../../../lib/knowledge/retriever/chromaRetriever";
 
-const COLLECTION_NAME = "srimathy_knowledge";
+const CHAT_MODEL =
+    process.env.OLLAMA_CHAT_MODEL || "gemma3:4b";
 
-const EMBEDDING_MODEL = "nomic-embed-text:latest";
-const CHAT_MODEL = "gemma3:4b";
+export async function POST(
+    request: NextRequest
+) {
+    const totalStart = Date.now();
 
-export async function POST(request: NextRequest) {
-  try {
-    // --------------------------------------------------
-    // 1. Read request
-    // --------------------------------------------------
+    try {
 
-    const body = await request.json();
+        // --------------------------------------------------
+        // 1. Read request
+        // --------------------------------------------------
 
-    const query =
-      typeof body?.query === "string"
-        ? body.query.trim()
-        : "";
+        const body = await request.json();
 
-    if (!query) {
-      return NextResponse.json(
-        {
-          error: "Query is required",
-        },
-        {
-          status: 400,
+        const query =
+            typeof body?.query === "string"
+                ? body.query.trim()
+                : "";
+
+        const grade =
+            typeof body?.grade === "string"
+                ? body.grade.trim()
+                : undefined;
+
+        const subject =
+            typeof body?.subject === "string"
+                ? body.subject.trim()
+                : undefined;
+
+        const board =
+            typeof body?.board === "string"
+                ? body.board.trim()
+                : undefined;
+
+        const book =
+            typeof body?.book === "string"
+                ? body.book.trim()
+                : undefined;
+
+        if (!query) {
+
+            return NextResponse.json(
+                {
+                    error: "Query is required",
+                },
+                {
+                    status: 400,
+                }
+            );
         }
-      );
-    }
 
-    console.log("");
-    console.log("======================================");
-    console.log("🔎 SRIMATHY RAG QUERY");
-    console.log("======================================");
-    console.log("Query:", query);
+        console.log("");
+        console.log("======================================");
+        console.log("🚀 SRIMATHY RAG REQUEST");
+        console.log("======================================");
 
-    // --------------------------------------------------
-    // 2. Generate query embedding
-    // --------------------------------------------------
+        console.log("Query:", query);
 
-    console.log("");
-    console.log("🧠 Generating query embedding...");
+        console.log(
+            "Curriculum:",
+            {
+                grade,
+                subject,
+                board,
+                book,
+            }
+        );
 
-    const embeddingResponse = await ollama.embeddings({
-      model: EMBEDDING_MODEL,
-      prompt: query,
-    });
+        // --------------------------------------------------
+        // 2. Curriculum-aware retrieval
+        // --------------------------------------------------
 
-    const queryEmbedding = embeddingResponse.embedding;
+        const retrievalStart =
+            Date.now();
 
-    console.log(
-      "✅ Query embedding generated:",
-      queryEmbedding.length,
-      "dimensions"
-    );
+        const chunks =
+            await retrieveKnowledge(
+                query,
+                5,
+                {
+                    grade,
+                    subject,
+                    board,
+                    book,
+                }
+            );
 
-    // --------------------------------------------------
-    // 3. Connect to ChromaDB
-    // --------------------------------------------------
+        const retrievalDuration =
+            Date.now() - retrievalStart;
 
-    console.log("");
-    console.log("🔌 Connecting to ChromaDB...");
+        console.log(
+            `⏱ Retrieval: ${retrievalDuration} ms`
+        );
 
-    const chroma = new ChromaClient({
-      host: CHROMA_HOST,
-      port: CHROMA_PORT,
-      ssl: false,
-    });
+        // --------------------------------------------------
+        // 3. No knowledge found
+        // --------------------------------------------------
 
-    console.log("✅ ChromaDB connected");
+        if (chunks.length === 0) {
 
-    // --------------------------------------------------
-    // 4. Get SRIMATHY knowledge collection
-    // --------------------------------------------------
+            const totalDuration =
+                Date.now() - totalStart;
 
-    console.log("");
-    console.log(
-      `📚 Opening collection: ${COLLECTION_NAME}`
-    );
+            console.log(
+                "⚠️ No useful knowledge retrieved"
+            );
 
-    const collection = await chroma.getCollection({
-      name: COLLECTION_NAME,
-    });
+            return NextResponse.json({
 
-    console.log(
-      "✅ Collection opened:",
-      collection.name
-    );
+                answer:
+                    "I couldn't find relevant information in the SRIMATHY knowledge base.",
 
-    // --------------------------------------------------
-    // 5. Semantic search
-    // --------------------------------------------------
+                sources: [],
 
-    console.log("");
-    console.log("🔍 Searching knowledge base...");
+                model: CHAT_MODEL,
 
-    const results = await collection.query({
-      queryEmbeddings: [queryEmbedding],
-      nResults: 5,
-    });
+                embeddingModel:
+                    process.env.OLLAMA_EMBEDDING_MODEL ||
+                    "nomic-embed-text",
 
-    const documents = results.documents?.[0] ?? [];
-    const metadatas = results.metadatas?.[0] ?? [];
-    const distances = results.distances?.[0] ?? [];
+                retrievedChunks: 0,
 
-    console.log(
-      `✅ Retrieved ${documents.length} knowledge chunks`
-    );
+                curriculum: {
+                    grade,
+                    subject,
+                    board,
+                    book,
+                },
 
-    // --------------------------------------------------
-    // 6. No results
-    // --------------------------------------------------
+                metrics: {
+                    retrievalDuration,
+                    totalDuration,
+                },
+            });
+        }
 
-    if (documents.length === 0) {
-      console.log(
-        "⚠️ No relevant knowledge found"
-      );
+        // --------------------------------------------------
+        // 4. Build knowledge context
+        // --------------------------------------------------
 
-      return NextResponse.json({
-        answer:
-          "I couldn't find relevant information in the SRIMATHY knowledge base.",
-        sources: [],
-        model: CHAT_MODEL,
-        embeddingModel: EMBEDDING_MODEL,
-        retrievedChunks: 0,
-      });
-    }
+        console.log("");
+        console.log(
+            "🧩 Building knowledge context..."
+        );
 
-    // --------------------------------------------------
-    // 7. Build context for Gemma
-    // --------------------------------------------------
+        const context =
+            chunks
+                .map(
+                    (chunk, index) => {
 
-    console.log("");
-    console.log(
-      "🧩 Building knowledge context..."
-    );
-
-    const context = documents
-      .map((document, index) => {
-        const text = document ?? "";
-        const metadata = metadatas[index] ?? {};
-
-        return `
+                        return `
+==============================
 SOURCE ${index + 1}
+==============================
 
-Document:
-${text}
+${chunk.text}
 
-Metadata:
-${JSON.stringify(metadata)}
+SOURCE METADATA:
+${JSON.stringify(
+    chunk.metadata,
+    null,
+    2
+)}
 `;
-      })
-      .join("\n");
+                    }
+                )
+                .join("\n");
 
-    // --------------------------------------------------
-    // 8. Build RAG prompt
-    // --------------------------------------------------
+        // --------------------------------------------------
+        // 5. Curriculum-aware prompt
+        // --------------------------------------------------
 
-    const prompt = `
+        const prompt = `
 You are SRIMATHY, an AI educational assistant.
 
-Your task is to answer the student's question using ONLY
-the knowledge retrieved from the SRIMATHY knowledge base.
+You are helping a student learn according to their
+specified school curriculum.
+
+CURRICULUM
+
+Grade: ${grade ?? "Not specified"}
+Subject: ${subject ?? "Not specified"}
+Board: ${board ?? "Not specified"}
+Book: ${book ?? "Not specified"}
 
 IMPORTANT RULES:
 
-1. Use only the supplied knowledge context.
-2. Do not invent facts.
-3. Do not use outside knowledge.
-4. If the answer is not supported by the context, say:
-   "I couldn't find that information in the SRIMATHY knowledge base."
-5. Explain the answer clearly and simply for a student.
-6. Do not mention internal implementation details unless asked.
+1. Answer using ONLY the supplied SRIMATHY knowledge context.
 
-Student question:
+2. Do not invent textbook facts.
+
+3. Do not use outside knowledge when answering
+   curriculum-specific questions.
+
+4. Prefer the knowledge that matches the student's
+   grade, subject and board.
+
+5. Explain concepts clearly and appropriately for
+   the student's grade level.
+
+6. Use simple examples when the retrieved material
+   supports them.
+
+7. If the supplied context does not contain enough
+   information to answer the question, say:
+
+   "I couldn't find that information in the
+   SRIMATHY knowledge base."
+
+8. Do not mention ChromaDB, embeddings, vectors,
+   retrieval, prompts or other internal implementation
+   details unless the user explicitly asks.
+
+9. Do not claim that something is in the textbook
+   unless it is supported by the supplied context.
+
+STUDENT QUESTION
 
 ${query}
 
-----------------------------------------
+========================================
 SRIMATHY KNOWLEDGE CONTEXT
-----------------------------------------
+========================================
 
 ${context}
 
-----------------------------------------
+========================================
 END KNOWLEDGE CONTEXT
-----------------------------------------
+========================================
 
-Now provide the best answer supported by the knowledge base.
+Now answer the student's question.
 `;
 
-    // --------------------------------------------------
-    // 9. Generate answer using Gemma
-    // --------------------------------------------------
+        // --------------------------------------------------
+        // 6. Generate answer
+        // --------------------------------------------------
 
-    console.log("");
-    console.log(
-      `🤖 Generating answer with ${CHAT_MODEL}...`
-    );
+        console.log("");
+        console.log(
+            `🤖 Generating with ${CHAT_MODEL}...`
+        );
 
-    const response = await ollama.generate({
-      model: CHAT_MODEL,
-      prompt,
-      stream: false,
-    });
+        const ollamaStart =
+            Date.now();
 
-    const answer =
-      response.response?.trim() ||
-      "I couldn't generate an answer.";
+        const response =
+            await ollama.generate({
+                model: CHAT_MODEL,
+                prompt,
+                stream: false,
+            });
 
-    console.log("✅ Answer generated");
+        const ollamaDuration =
+            Date.now() - ollamaStart;
 
-    // --------------------------------------------------
-    // 10. Format sources
-    // --------------------------------------------------
+        const answer =
+            response.response?.trim() ||
+            "I couldn't generate an answer.";
 
-    console.log("");
-    console.log("📚 Formatting sources...");
+        console.log(
+            `✅ Answer generated in ${ollamaDuration} ms`
+        );
 
-    const sources = documents.map(
-      (document, index) => ({
-        document: (document ?? "").slice(0, 300),
+        // --------------------------------------------------
+        // 7. Format sources
+        // --------------------------------------------------
 
-        metadata:
-          metadatas[index] ?? {},
+        const sources =
+            chunks.map(
+                (chunk) => ({
+                    id: chunk.id,
 
-        distance:
-          distances[index] ?? null,
-      })
-    );
+                    document:
+                        chunk.text.slice(0, 400),
 
-    // --------------------------------------------------
-    // 11. Return response
-    // --------------------------------------------------
+                    metadata:
+                        chunk.metadata,
 
-    console.log("");
-    console.log("======================================");
-    console.log("✅ SRIMATHY RAG RESPONSE READY");
-    console.log("======================================");
-    console.log(
-      "Embedding model:",
-      EMBEDDING_MODEL
-    );
-    console.log(
-      "Chat model:",
-      CHAT_MODEL
-    );
-    console.log(
-      "Retrieved chunks:",
-      documents.length
-    );
-    console.log("");
+                    distance:
+                        chunk.distance,
+                })
+            );
 
-    return NextResponse.json({
-      answer,
+        // --------------------------------------------------
+        // 8. Metrics
+        // --------------------------------------------------
 
-      sources,
+        const totalDuration =
+            Date.now() - totalStart;
 
-      model: CHAT_MODEL,
+        const ollamaMetrics =
+            response as any;
 
-      embeddingModel: EMBEDDING_MODEL,
+        const metrics = {
+            retrievalDuration,
+            ollamaDuration,
+            totalDuration,
 
-      retrievedChunks: documents.length,
-    });
-  } catch (error) {
-    // --------------------------------------------------
-    // Error handling
-    // --------------------------------------------------
+            ollama: {
+                totalDuration:
+                    ollamaMetrics.total_duration ?? null,
 
-    console.error("");
-    console.error("======================================");
-    console.error("❌ SRIMATHY RAG ERROR");
-    console.error("======================================");
-    console.error(error);
-    console.error("");
+                loadDuration:
+                    ollamaMetrics.load_duration ?? null,
 
-    const message =
-      error instanceof Error
-        ? error.message
-        : "RAG request failed";
+                promptEvalCount:
+                    ollamaMetrics.prompt_eval_count ?? null,
 
-    return NextResponse.json(
-      {
-        error: message,
-      },
-      {
-        status: 500,
-      }
-    );
-  }
+                promptEvalDuration:
+                    ollamaMetrics.prompt_eval_duration ?? null,
+
+                evalCount:
+                    ollamaMetrics.eval_count ?? null,
+
+                evalDuration:
+                    ollamaMetrics.eval_duration ?? null,
+
+                tokensPerSecond:
+                    ollamaMetrics.eval_count &&
+                    ollamaMetrics.eval_duration
+                        ? (
+                            ollamaMetrics.eval_count /
+                            (ollamaMetrics.eval_duration / 1e9)
+                        )
+                        : null,
+            },
+        };
+
+        // --------------------------------------------------
+        // 9. Final response
+        // --------------------------------------------------
+
+        console.log("");
+        console.log("======================================");
+        console.log("🎉 SRIMATHY RAG COMPLETE");
+        console.log("======================================");
+
+        console.log(
+            "Retrieved chunks:",
+            chunks.length
+        );
+
+        console.log(
+            "Chat model:",
+            CHAT_MODEL
+        );
+
+        console.log(
+            "Total duration:",
+            totalDuration,
+            "ms"
+        );
+
+        return NextResponse.json({
+
+            answer,
+
+            sources,
+
+            model:
+                CHAT_MODEL,
+
+            embeddingModel:
+                process.env.OLLAMA_EMBEDDING_MODEL ||
+                "nomic-embed-text",
+
+            retrievedChunks:
+                chunks.length,
+
+            curriculum: {
+                grade,
+                subject,
+                board,
+                book,
+            },
+
+            metrics,
+        });
+
+    } catch (error) {
+
+        console.error("");
+        console.error("======================================");
+        console.error("❌ SRIMATHY RAG ERROR");
+        console.error("======================================");
+
+        console.error(error);
+
+        const message =
+            error instanceof Error
+                ? error.message
+                : "RAG request failed";
+
+        return NextResponse.json(
+            {
+                error: message,
+            },
+            {
+                status: 500,
+            }
+        );
+    }
 }

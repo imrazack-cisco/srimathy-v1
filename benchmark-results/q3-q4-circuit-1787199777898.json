@@ -1,0 +1,143 @@
+{
+  "generatedAt": "2026-08-20T04:22:57.898Z",
+  "benchmark": "SRIMATHY Q3 vs Q4 vs CIRCUIT",
+  "prompts": [
+    {
+      "id": "fractions",
+      "grade": "5",
+      "subject": "Mathematics",
+      "prompt": "Explain equivalent fractions to a Grade 5 student using a simple real-world example."
+    },
+    {
+      "id": "variables",
+      "grade": "6",
+      "subject": "Mathematics",
+      "prompt": "Explain the idea of variables to a Grade 6 student in a simple way with two examples."
+    },
+    {
+      "id": "fractions-advanced",
+      "grade": "7",
+      "subject": "Mathematics",
+      "prompt": "Explain fractions to a Grade 7 student. Include one worked example and two practice questions."
+    }
+  ],
+  "results": [
+    {
+      "model": "gemma3:4b-q3",
+      "provider": "OLLAMA",
+      "promptId": "fractions",
+      "grade": "5",
+      "subject": "Mathematics",
+      "latencyMs": 6628,
+      "loadDurationMs": 1435,
+      "promptTokens": 26,
+      "outputTokens": 415,
+      "tokensPerSecond": 81.77,
+      "responseLength": 1552,
+      "response": "Okay, let's talk about equivalent fractions! They’re like different ways of saying the same thing – just with different numbers.\n\n**Imagine you have a pizza.** Let’s say your whole pizza is cut into 8 slices. 🍕\n\n* **You eat one slice.** That means you ate 1/8 (one eighth) of the pizza.\n\nNow, let's say your friend eats two slices.  That's two out of the eight slices. \n\n* **Your friend ate 2/8 (two eights) of the pizza.**\n\n\n**Here’s the cool thing: even though you ate different amounts of pizza, you both ate the *same amount* of the whole pizza!** 1/8 and 2/8 are equivalent fractions.  They represent the same portion of the pizza.\n\nThink about it like this:\n\n* **1/8** is one slice out of eight slices.\n* **2/8** is two slices out of eight slices.\n\n\n**We can write them as equivalent fractions:** 1/8 = 2/8\n\n\n\n**Another example:**\n\nLet's say you have a chocolate bar divided into 4 equal pieces.\n\n* You eat one piece. That’s 1/4 (one fourth) of the chocolate bar.\n* Your brother eats two pieces. That’s 2/4 (two fourths) of the chocolate bar.\n\nAgain, even though you ate different amounts, you both ate the *same amount* of the whole chocolate bar!  1/4 and 2/4 are equivalent fractions.\n\n\n**Key takeaway:** Equivalent fractions look different but represent the same part of a whole. They can have different numerators (the top number) and denominators (the bottom number), but they equal the same value.\n\n---\n\n**Do you want me to:**\n\n*   Give you some more examples?\n*   Show you how equivalent fractions are written using diagrams or drawings?"
+    },
+    {
+      "model": "gemma3:4b",
+      "provider": "OLLAMA",
+      "promptId": "fractions",
+      "grade": "5",
+      "subject": "Mathematics",
+      "latencyMs": 7407,
+      "loadDurationMs": 2146,
+      "promptTokens": 27,
+      "outputTokens": 413,
+      "tokensPerSecond": 79.85,
+      "responseLength": 1502,
+      "response": "Okay, let's talk about equivalent fractions! It’s like saying the same thing in different ways.\n\n**Imagine you're sharing a pizza with your friend.**\n\nYou cut the whole pizza into **8 slices**.  That means each slice is one eighth (1/8) of the pizza. \n\nNow, let’s say you and your friend both want to eat some pizza. You decide to take 2 slices. That's 2/8 of the pizza. \n\n**But what if instead of taking 2 slices, you took 4 slices?**  You would still have eaten exactly the same amount of pizza! \n\nSee? Even though we wrote it differently (2/8 and 4/8), they represent the *same* portion of the pizza. That's what equivalent fractions are – different ways to show the same amount.\n\n\n**Here’s how it looks:**\n\n* **1/8**  (one slice out of eight)\n* **2/8** (two slices out of eight)\n* **4/8** (four slices out of eight) \n\n\n\nAll three fractions – 1/8, 2/8, and 4/8 – are equivalent because they all represent the same amount of pizza.\n\n**How do we find them?**  We can multiply or divide both the top number (the numerator) and the bottom number (the denominator) by the *same* number! In our example, we multiplied the bottom number (8) by 2 to get 16, and then divided both numbers in 2/8 by 2 to get 4/8.\n\n\n**Important Note:** Equivalent fractions have the same value, even though they look different.  It's like saying \"half\" and \"two-thirds\" – they both represent half of something!\n\n---\n\n**Do you want me to try another example with a different situation, like sharing cookies or drawing shapes?**"
+    },
+    {
+      "model": "gemini-3.1-flash-lite",
+      "provider": "CIRCUIT",
+      "promptId": "fractions",
+      "grade": "5",
+      "subject": "Mathematics",
+      "latencyMs": 1500,
+      "responseLength": 0,
+      "response": "",
+      "error": "CIRCUIT HTTP 401: HTTP 401"
+    },
+    {
+      "model": "gemma3:4b-q3",
+      "provider": "OLLAMA",
+      "promptId": "variables",
+      "grade": "6",
+      "subject": "Mathematics",
+      "latencyMs": 7227,
+      "loadDurationMs": 1449,
+      "promptTokens": 28,
+      "outputTokens": 433,
+      "tokensPerSecond": 78.34,
+      "responseLength": 1654,
+      "response": "Okay, imagine you're playing a game and need to keep track of things like your score or how many cookies you have. Variables are just like labels we use to give names to those numbers so we can easily remember them and change them as the game goes on! \n\n**Think of it this way:** A variable is a container that holds information, like a number, word, or even a list of things. We use a name (the variable) to refer to that container.\n\n\nHere are two examples:\n\n**Example 1: The Cookie Jar**\n\n*   Let's say you’re baking cookies and you start with 5 cookies in your jar.  We can call the number of cookies in the jar \"cookies\".\n*   You eat 2 cookies. Now, the number of cookies in the jar is different! We can update our variable:\n    *   `cookies = 3` (Now there are 3 cookies left)\n\n    So, “cookies” is the variable and its value (the number inside it) changes as things happen in the game.\n\n\n**Example 2: Your Score in a Video Game**\n\n*   In a video game, you start with a score of 0.  We can call this \"score\".\n*   You earn 10 points by defeating a monster!\n    *   `score = 10` (Your score is now 10)\n*   Then you lose 5 points because you bumped into a wall.\n    *   `score = 15` (Your score is now 15 again!)\n\n    Again, “score” is the variable and its value changes as you play the game.\n\n\n**Key Takeaway:** Variables are just names we give to values so we can use them in our code or calculations without having to remember the exact number itself! They're like placeholders that change based on what happens.\n\n---\n\nDo you want me to:\n\n*   Give another example?\n*   Explain how variables are used in a specific programming language (like Python)?"
+    },
+    {
+      "model": "gemma3:4b",
+      "provider": "OLLAMA",
+      "promptId": "variables",
+      "grade": "6",
+      "subject": "Mathematics",
+      "latencyMs": 5857,
+      "loadDurationMs": 251,
+      "promptTokens": 29,
+      "outputTokens": 443,
+      "tokensPerSecond": 80.5,
+      "responseLength": 1648,
+      "response": "Okay, let's talk about variables!\n\n**What are Variables?**\n\nImagine a variable like a labeled box where you can put something – a number, a word, or even a picture.  It’s a name we give to a piece of information that *can* change during a game or calculation. It's like saying \"Hey, I'm going to remember this value and maybe use it later!\"\n\n**Example 1: The Score in a Game**\n\nLet's say you're playing a simple game with your friend. You decide to call the score “points”.  \n\n*   At the beginning of the game, \"points\" might be equal to 0. (points = 0)\n*   You score 5 points! Now \"points\" is equal to 5. (points = 5)\n*   Your friend scores 2 points! Now “points” is equal to 7. (points = 7)\n\n“Points” is a variable because it holds the number of points you have, and that number changes as you play.\n\n\n**Example 2:  Counting Apples**\n\nYou're counting how many apples are in a basket. You decide to call the number of apples \"apples_count\".\n\n*   At first, there are 3 apples in the basket. So you write: apples_count = 3\n*   You add 2 more apples. Now you have 5 apples.  So you change it to: apples_count = 5\n*   Someone takes away 1 apple. Now you have 4 apples. So you update it again: apples_count = 4\n\n“apples_count” is a variable because it keeps track of how many apples there are, and the number changes as you add or remove them.\n\n\n**Key takeaway:**  Variables are just names we give to places where we store information that can change! They help us keep track of things in our computer programs and calculations. \n\n---\n\nDo you want me to explain a bit more about how variables are used in a simple program, like adding numbers together?"
+    },
+    {
+      "model": "gemini-3.1-flash-lite",
+      "provider": "CIRCUIT",
+      "promptId": "variables",
+      "grade": "6",
+      "subject": "Mathematics",
+      "latencyMs": 1380,
+      "responseLength": 0,
+      "response": "",
+      "error": "CIRCUIT HTTP 401: HTTP 401"
+    },
+    {
+      "model": "gemma3:4b-q3",
+      "provider": "OLLAMA",
+      "promptId": "fractions-advanced",
+      "grade": "7",
+      "subject": "Mathematics",
+      "latencyMs": 9896,
+      "loadDurationMs": 144,
+      "promptTokens": 27,
+      "outputTokens": 766,
+      "tokensPerSecond": 79.35,
+      "responseLength": 2677,
+      "response": "Okay, let's break down fractions! They can seem tricky at first, but they’re actually really useful for representing parts of a whole.\n\n**What is a Fraction?**\n\nA fraction shows how many parts of a whole we have. It’s written as two numbers separated by a line:  a numerator (top number) and a denominator (bottom number). \n\n* **Denominator:** The bottom number tells you *how many equal pieces* the whole has been divided into. Think of it like slicing a pizza – the denominator is how many slices you get.\n* **Numerator:** The top number tells you *how many of those pieces we have*.\n\n\n**Types of Fractions:**\n\n* **Proper Fraction:**  The numerator is smaller than the denominator (e.g., 1/2, 3/5). This means you have a smaller piece of the whole.\n* **Improper Fraction:** The numerator is larger or equal to the denominator (e.g., 5/4, 7/3). These fractions represent more pieces than the whole itself! We can simplify these into mixed numbers (which we'll touch on later).\n\n\n**Examples:**\n\n* **1/2:**  This means you have one piece out of two equal pieces. Imagine cutting a cookie in half – you’d have 1/2 of the cookie each.\n* **3/4:** This means you have three pieces out of four equal pieces. Think about a pizza cut into four slices; 3/4 would be eating three of those slices.\n* **5/5:** This is the same as 1 whole! If you divide something into five equal parts, and take one part, you've got 5/5 of it.\n\n\n\n**Worked Example: Simplifying a Fraction**\n\nLet’s simplify the fraction 6/8.  This means we have six pieces out of eight total pieces.\n\n1. **Find Common Factors:** We need to see if there's a number that both 6 and 8 can be divided by evenly. The factors of 6 are 1, 2, 3, and 6. The factors of 8 are 1, 2, 4, and 8.  The biggest common factor is 2.\n\n2. **Divide Both Numbers:** Divide both the numerator (6) and denominator (8) by their greatest common factor (which is 2):\n   * 6 / 2 = 3\n   * 8 / 2 = 4\n\n3. **Simplified Fraction:**  The simplified fraction is 3/4. This means you have three pieces out of four equal pieces.\n\n\n**Practice Questions:**\n\n1.  **What does the denominator of a fraction represent?**\n    a) The number of parts we are taking.\n    b) The total number of equal parts the whole has been divided into.\n    c) The size of each piece.\n    d) The numerator of the fraction.\n\n2. **Simplify the following fraction: 4/12**\n   *  a) 1/3\n   *  b) 1/2\n   *  c) 2/3\n   *  d) 3/4\n\n\n\n**Answers:**\n\n1.  b) The total number of equal parts the whole has been divided into.\n2.  a) 1/3 (Both 4 and 12 are divisible by 4)\n\n\n---\n\nDo you want me to:\n\n*   Explain mixed numbers?\n*   Work through more examples?\n*   Give you some fraction problems to solve?"
+    },
+    {
+      "model": "gemma3:4b",
+      "provider": "OLLAMA",
+      "promptId": "fractions-advanced",
+      "grade": "7",
+      "subject": "Mathematics",
+      "latencyMs": 9909,
+      "loadDurationMs": 234,
+      "promptTokens": 28,
+      "outputTokens": 769,
+      "tokensPerSecond": 80.24,
+      "responseLength": 2783,
+      "response": "Okay, let's talk about fractions! They can seem a little tricky at first, but they’re actually pretty straightforward once you understand the basic idea.\n\n**What is a Fraction?**\n\nA fraction represents part of a whole. Think of it like sharing something equally with others. \n\n* **The Numerator:** This number (the top number) tells you *how many parts you have*.\n* **The Denominator:** This number (the bottom number) tells you *how many total equal parts the whole is divided into*.\n\n\n**Example:  1/4**\n\nLet's break down 1/4.\n\n* The denominator, '4', means the whole has been divided into four equal pieces.\n* The numerator, '1', means you have one of those pieces.\n\nSo, 1/4 represents *one out of four* equal parts of something.  Imagine a pizza cut into four slices – if you take one slice, you’ve eaten 1/4 (one-fourth) of the pizza.\n\n\n**Types of Fractions:**\n\n* **Proper Fraction:** The numerator is smaller than the denominator (like 1/4). This means the part is less than the whole.\n* **Improper Fraction:** The numerator is larger than or equal to the denominator (like 5/4).  This represents more than one whole. You can often turn these into mixed numbers (a whole number and a fraction) – we won't focus on that here, but it’s good to know!\n\n\n**Worked Example: Sharing Cookies**\n\nLet’s say you have 6 cookies and you want to share them equally with your friend.\n\n1. **What is the total?** The whole is the 6 cookies.\n2. **How many people are sharing?** You and your friend – that's 2 people.\n3. **What fraction of the cookies do you each get?**  We need to divide the total number of cookies (6) by the number of people (2):  6 / 2 = 3\n\nSo, you each get 3/6 (three-sixths) of the cookies. This means you each got 1/2 (one-half) of all the cookies!\n\n\n**Practice Questions:**\n\n**Question 1:**\n\nSarah baked a pie and cut it into 8 equal slices. She ate 3 slices. What fraction of the pie did she eat?\n\n*   A) 3/5\n*   B) 3/8\n*   C) 8/3\n*   D) 5/3\n\n\n**Question 2:**\n\nDavid has a rectangular garden that is divided into 5 equal sections. He plants flowers in 2 of the sections. What fraction of the garden does he plant with flowers?\n\n*   A) 2/3\n*   B) 3/5\n*   C) 5/2\n*   D) 1/5\n\n\n\n**Answers:**\n\n1.  B) 3/8\n2.  B) 3/5\n\n\n---\n\n**Tips for Understanding Fractions:**\n\n* **Draw pictures!** Visualizing fractions with shapes (circles, squares, rectangles) is a really helpful way to understand them.\n* **Use real-life examples.** Think about sharing food, measuring things, or dividing tasks – all of these involve fractions.\n* **Practice, practice, practice!** The more you work with fractions, the easier they will become.\n\nDo you want me to explain something in more detail, like how to convert improper fractions to mixed numbers, or perhaps give you some more practice problems?"
+    },
+    {
+      "model": "gemini-3.1-flash-lite",
+      "provider": "CIRCUIT",
+      "promptId": "fractions-advanced",
+      "grade": "7",
+      "subject": "Mathematics",
+      "latencyMs": 1391,
+      "responseLength": 0,
+      "response": "",
+      "error": "CIRCUIT HTTP 401: HTTP 401"
+    }
+  ]
+}

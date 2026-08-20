@@ -1,0 +1,5 @@
+FROM ./models/gemma3-q3/gemma-3-4b-it-Q3_K_M.gguf
+
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER num_ctx 8192

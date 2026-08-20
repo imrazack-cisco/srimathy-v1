@@ -1,70 +1,103 @@
-import { KnowledgeDocument } from "../models/document";
-import { KnowledgeChunk } from "../models/chunk";
+import type {
+  KnowledgeDocument,
+} from "../lib/knowledge/models/document";
+
+export interface LegacyKnowledgeChunk {
+  id: string;
+  documentId: string;
+  chunkIndex: number;
+  content: string;
+
+  metadata: {
+    source: string;
+    title: string;
+    pageCount?: number;
+    loader?: string;
+  };
+}
 
 export class RecursiveSplitter {
 
-    constructor(
+  constructor(
+    private chunkSize = 1000,
+    private overlap = 200
+  ) {}
 
-        private chunkSize = 1000,
+  split(
+    document: KnowledgeDocument
+  ): LegacyKnowledgeChunk[] {
 
-        private overlap = 200
+    const chunks: LegacyKnowledgeChunk[] = [];
 
-    ) {}
+    const text =
+      document.content;
 
-    split(document: KnowledgeDocument): KnowledgeChunk[] {
+    let index = 0;
+    let chunkNumber = 0;
 
-        const chunks: KnowledgeChunk[] = [];
+    const step =
+      Math.max(
+        1,
+        this.chunkSize -
+          this.overlap
+      );
 
-        const text = document.content;
+    while (
+      index < text.length
+    ) {
 
-        let index = 0;
+      const end =
+        Math.min(
+          index +
+            this.chunkSize,
+          text.length
+        );
 
-        let chunkNumber = 0;
+      const chunkText =
+        text.slice(
+          index,
+          end
+        );
 
-        while (index < text.length) {
+      chunks.push({
 
-            const end = Math.min(
+        id:
+          `${document.id}-${chunkNumber}`,
 
-                index + this.chunkSize,
+        documentId:
+          document.id,
 
-                text.length
+        chunkIndex:
+          chunkNumber,
 
-            );
+        content:
+          chunkText,
 
-            const chunkText = text.slice(index, end);
+        metadata: {
 
-            chunks.push({
+          source:
+            document.source,
 
-                id: `${document.id}-${chunkNumber}`,
+          title:
+            document.title,
 
-                documentId: document.id,
+          pageCount:
+            document.metadata
+              .pageCount,
 
-                chunkIndex: chunkNumber,
+          loader:
+            document.metadata
+              .loader,
 
-                content: chunkText,
+        },
 
-                metadata: {
+      });
 
-                    source: document.source,
+      chunkNumber++;
 
-                    title: document.title,
-
-                    pageCount: document.metadata.pageCount,
-
-                    loader: document.metadata.loader
-
-                }
-
-            });
-
-            chunkNumber++;
-
-            index += this.chunkSize - this.overlap;
-
-        }
-
-        return chunks;
-
+      index += step;
     }
 
+    return chunks;
+  }
 }

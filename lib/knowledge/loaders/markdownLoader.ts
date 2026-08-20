@@ -3,38 +3,61 @@ import pdfParse from "pdf-parse";
 import { v4 as uuid } from "uuid";
 
 import { BaseLoader } from "./baseLoader";
-import { KnowledgeDocument } from "../models/document";
+import type {
+  KnowledgeDocument,
+} from "../models/document";
 
-export class PDFLoader implements BaseLoader {
+export class PDFLoader
+  implements BaseLoader {
 
-    async load(filePath: string): Promise<KnowledgeDocument[]> {
+  async load(
+    filePath: string
+  ): Promise<KnowledgeDocument[]> {
 
-        const buffer = fs.readFileSync(filePath);
+    const buffer =
+      fs.readFileSync(filePath);
 
-        const pdf = await pdfParse(buffer);
+    const pdf =
+      await pdfParse(buffer);
 
-        return [
+    return [
 
-            {
+      {
 
-                id: uuid(),
+        id: uuid(),
 
-                title: filePath.split("/").pop() || "",
+        title:
+          filePath
+            .split("/")
+            .pop() || "",
 
-                source: filePath,
+        source:
+          filePath,
 
-                content: pdf.text,
+        content:
+          pdf.text,
 
-                metadata: {
+        metadata: {
 
-                    page: pdf.numpages
+          pageCount:
+            pdf.numpages,
 
-                }
+          fileName:
+            filePath
+              .split("/")
+              .pop() || "",
 
-            }
+          loader:
+            "pdf-parse",
 
-        ];
+          ingestedAt:
+            new Date()
+              .toISOString(),
 
-    }
+        },
 
+      },
+
+    ];
+  }
 }

@@ -1,0 +1,121 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import {
+  masterAgent,
+} from "@/agents/master";
+
+import {
+  RetrievalContext,
+} from "@/lib/knowledge/retriever/chromaRetriever";
+
+export async function POST(
+  request: NextRequest
+) {
+  try {
+    const body =
+      await request.json();
+
+    const prompt =
+      typeof body.prompt === "string"
+        ? body.prompt.trim()
+        : "";
+
+    if (!prompt) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Prompt is required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const curriculum =
+      body.curriculum as
+        | RetrievalContext
+        | undefined;
+
+    const history =
+      Array.isArray(body.history)
+        ? body.history
+        : [];
+
+    console.log(
+      "\n======================================"
+    );
+
+    console.log(
+      "📩 SRIMATHY AGENT REQUEST"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+    console.log(
+      "Prompt:",
+      prompt
+    );
+
+    console.log(
+      "Curriculum:",
+      curriculum
+    );
+
+    console.log(
+      "History turns:",
+      history.length
+    );
+
+    const result =
+      await masterAgent({
+        topic: prompt,
+        curriculum,
+        history,
+      });
+
+    return NextResponse.json({
+      success: true,
+
+      data: result,
+
+      curriculum:
+        result.curriculum,
+
+      retrieval:
+        result.retrieval,
+
+      research:
+        result.research,
+
+      runtime:
+        result.runtime,
+
+      telemetry:
+        result.telemetry,
+    });
+
+  } catch (error) {
+
+    console.error(
+      "❌ /api/agent failed:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        success: false,
+
+        error:
+          error instanceof Error
+            ? error.message
+            : "SRIMATHY agent failed.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}

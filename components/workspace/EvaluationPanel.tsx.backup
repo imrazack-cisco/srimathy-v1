@@ -1,0 +1,494 @@
+"use client";
+
+import { useState } from "react";
+
+interface BenchmarkResponse {
+  success: boolean;
+
+  benchmark: {
+    status: string;
+    tests: number;
+    passed: number;
+    failed: number;
+    overallScore: number;
+  };
+
+  accuracy: {
+    retrieval: number;
+    curriculum: number;
+    grounding: number;
+  };
+
+  performance: {
+    averageRetrievalMs: number;
+    averageGenerationMs: number;
+    totalDurationMs: number;
+  };
+
+  runtime: {
+    chatModel: string;
+    embeddingModel: string;
+    vectorStore: string;
+    provider: string;
+    mode: string;
+  };
+}
+
+export default function EvaluationPanel() {
+  const [loading, setLoading] =
+    useState(false);
+
+  const [result, setResult] =
+    useState<BenchmarkResponse | null>(
+      null
+    );
+
+  const [error, setError] =
+    useState("");
+
+  async function runBenchmark() {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response =
+        await fetch(
+          "/api/evaluation",
+          {
+            method: "POST",
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.error ||
+            "Benchmark failed"
+        );
+      }
+
+      setResult(data);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Benchmark failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section className="mt-8">
+
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold">
+          🧪 SRIMATHY Evaluation
+        </h2>
+
+        <p className="mt-2 text-slate-400">
+          Reproducible benchmarking of
+          curriculum-aware retrieval,
+          grounding and runtime performance.
+        </p>
+      </div>
+
+      <div
+        className="
+          rounded-2xl
+          border
+          border-slate-800
+          bg-slate-950/70
+          p-8
+          shadow-xl
+        "
+      >
+
+        <div
+          className="
+            flex
+            flex-col
+            gap-6
+            lg:flex-row
+            lg:items-center
+            lg:justify-between
+          "
+        >
+
+          <div>
+            <div className="text-sm uppercase tracking-widest text-cyan-400">
+              Benchmark Suite
+            </div>
+
+            <h3 className="mt-2 text-2xl font-bold">
+              Curriculum & RAG Evaluation
+            </h3>
+
+            <p className="mt-2 max-w-2xl text-sm text-slate-400">
+              Tests NCERT curriculum isolation,
+              retrieval accuracy, answer
+              generation and local inference
+              performance.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={runBenchmark}
+            disabled={loading}
+            className="
+              rounded-xl
+              bg-cyan-500
+              px-8
+              py-4
+              font-semibold
+              text-slate-950
+              transition
+              hover:bg-cyan-400
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            "
+          >
+            {loading
+              ? "Running Benchmark..."
+              : "▶ Run Benchmark"}
+          </button>
+
+        </div>
+
+        {error && (
+          <div
+            className="
+              mt-6
+              rounded-xl
+              border
+              border-red-900
+              bg-red-950/30
+              p-4
+              text-red-300
+            "
+          >
+            ❌ {error}
+          </div>
+        )}
+
+        {loading && (
+          <div className="mt-8 animate-pulse text-cyan-300">
+            🧠 Running SRIMATHY evaluation suite...
+          </div>
+        )}
+
+        {result && (
+          <div className="mt-10">
+
+            {/* SCORE */}
+
+            <div
+              className="
+                grid
+                grid-cols-1
+                gap-6
+                md:grid-cols-4
+              "
+            >
+
+              <Metric
+                label="Overall Score"
+                value={`${result.benchmark.overallScore}%`}
+              />
+
+              <Metric
+                label="Tests Passed"
+                value={`${result.benchmark.passed}/${result.benchmark.tests}`}
+              />
+
+              <Metric
+                label="Retrieval Accuracy"
+                value={`${result.accuracy.retrieval}%`}
+              />
+
+              <Metric
+                label="Curriculum Accuracy"
+                value={`${result.accuracy.curriculum}%`}
+              />
+
+            </div>
+
+            {/* STATUS */}
+
+            <div
+              className="
+                mt-6
+                rounded-xl
+                border
+                border-slate-800
+                bg-slate-900
+                p-6
+              "
+            >
+
+              <div className="flex items-center justify-between">
+
+                <div>
+                  <div className="text-sm text-slate-500">
+                    Benchmark Status
+                  </div>
+
+                  <div
+                    className={`
+                      mt-1
+                      text-2xl
+                      font-bold
+                      ${
+                        result.benchmark.status ===
+                        "PASS"
+                          ? "text-green-400"
+                          : "text-yellow-400"
+                      }
+                    `}
+                  >
+                    {result.benchmark.status}
+                  </div>
+                </div>
+
+                <div className="text-4xl">
+                  {result.benchmark.status ===
+                  "PASS"
+                    ? "✅"
+                    : "⚠️"}
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* ACCURACY */}
+
+            <div className="mt-6">
+
+              <h3 className="mb-4 text-xl font-semibold">
+                Evaluation Dimensions
+              </h3>
+
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-4
+                  md:grid-cols-3
+                "
+              >
+
+                <ScoreCard
+                  title="Retrieval Accuracy"
+                  score={result.accuracy.retrieval}
+                  description="Correct curriculum knowledge retrieved"
+                />
+
+                <ScoreCard
+                  title="Curriculum Accuracy"
+                  score={result.accuracy.curriculum}
+                  description="Grade, subject and book isolation"
+                />
+
+                <ScoreCard
+                  title="Grounding"
+                  score={result.accuracy.grounding}
+                  description="Retrieved context successfully used"
+                />
+
+              </div>
+
+            </div>
+
+            {/* PERFORMANCE */}
+
+            <div className="mt-8">
+
+              <h3 className="mb-4 text-xl font-semibold">
+                ⚡ Runtime Performance
+              </h3>
+
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-4
+                  md:grid-cols-3
+                "
+              >
+
+                <InfoCard
+                  label="Avg Retrieval"
+                  value={`${result.performance.averageRetrievalMs} ms`}
+                />
+
+                <InfoCard
+                  label="Avg Generation"
+                  value={`${(
+                    result.performance
+                      .averageGenerationMs /
+                    1000
+                  ).toFixed(2)} sec`}
+                />
+
+                <InfoCard
+                  label="Benchmark Runtime"
+                  value={`${(
+                    result.performance
+                      .totalDurationMs /
+                    1000
+                  ).toFixed(2)} sec`}
+                />
+
+              </div>
+
+            </div>
+
+            {/* RUNTIME */}
+
+            <div className="mt-8">
+
+              <h3 className="mb-4 text-xl font-semibold">
+                🤖 AI Runtime
+              </h3>
+
+              <div
+                className="
+                  rounded-xl
+                  border
+                  border-slate-800
+                  bg-slate-900
+                  p-6
+                "
+              >
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
+                  <RuntimeItem
+                    label="Generation Model"
+                    value={result.runtime.chatModel}
+                  />
+
+                  <RuntimeItem
+                    label="Embedding Model"
+                    value={result.runtime.embeddingModel}
+                  />
+
+                  <RuntimeItem
+                    label="Vector Store"
+                    value={result.runtime.vectorStore}
+                  />
+
+                  <RuntimeItem
+                    label="Provider"
+                    value={`${result.runtime.provider} • ${result.runtime.mode}`}
+                  />
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+      </div>
+
+    </section>
+  );
+}
+
+function Metric({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <div className="text-sm text-slate-500">
+        {label}
+      </div>
+
+      <div className="mt-2 text-3xl font-bold text-cyan-400">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function ScoreCard({
+  title,
+  score,
+  description,
+}: {
+  title: string;
+  score: number;
+  description: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+
+      <div className="text-sm text-slate-400">
+        {title}
+      </div>
+
+      <div className="mt-2 text-3xl font-bold text-white">
+        {score}%
+      </div>
+
+      <div className="mt-2 text-xs text-slate-500">
+        {description}
+      </div>
+
+    </div>
+  );
+}
+
+function InfoCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+
+      <div className="text-sm text-slate-500">
+        {label}
+      </div>
+
+      <div className="mt-2 text-xl font-semibold text-white">
+        {value}
+      </div>
+
+    </div>
+  );
+}
+
+function RuntimeItem({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div>
+      <div className="text-xs uppercase tracking-widest text-slate-500">
+        {label}
+      </div>
+
+      <div className="mt-1 text-sm text-cyan-300">
+        {value}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,2513 @@
+[
+  {
+    "id": "req-1787209563675-8m58lz",
+    "timestamp": "2026-08-20T07:08:06.981Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 123306,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 15761,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 31645,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 32290,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9444,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787208977491-21vip8",
+    "timestamp": "2026-08-20T06:58:03.833Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 106341,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 10109,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 31889,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 33333,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9176,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787208878713-2vj5n2",
+    "timestamp": "2026-08-20T06:54:58.300Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 19587,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4335,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3807,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5542,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5138,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787208838954-eoxq6m",
+    "timestamp": "2026-08-20T06:54:18.607Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 19653,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4444,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3997,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4832,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5414,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787208794210-56nfqp",
+    "timestamp": "2026-08-20T06:53:34.543Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20333,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 5516,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3385,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5828,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4882,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787208734314-uiv8s3",
+    "timestamp": "2026-08-20T06:52:34.549Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20235,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4619,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 4123,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4982,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5599,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787208077855-pv70f8",
+    "timestamp": "2026-08-20T06:41:37.921Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20066,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 5029,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3973,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4779,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5292,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787207781697-o5zpj5",
+    "timestamp": "2026-08-20T06:36:44.001Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 22304,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4280,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 4005,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5417,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7742,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787207415526-209ziq",
+    "timestamp": "2026-08-20T06:30:38.181Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 22655,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 5070,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3960,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 8180,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4851,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787206985611-6xzfbp",
+    "timestamp": "2026-08-20T06:23:25.926Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20315,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4735,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 5206,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4843,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4940,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787206617628-itn5h2",
+    "timestamp": "2026-08-20T06:17:20.277Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 22649,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4956,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3724,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 6588,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 6553,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787206564839-s9u9u1",
+    "timestamp": "2026-08-20T06:16:24.197Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 19358,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4750,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3857,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4960,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4929,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787205710525-zjq2gn",
+    "timestamp": "2026-08-20T06:02:08.801Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 18276,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4526,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3681,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4617,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4730,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787205656995-lhwvaj",
+    "timestamp": "2026-08-20T06:01:18.829Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 21834,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 6204,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 4728,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4600,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5449,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787205404924-48nz7c",
+    "timestamp": "2026-08-20T05:57:05.713Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20789,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4640,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 5339,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4398,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5497,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787205289745-sk10ej",
+    "timestamp": "2026-08-20T05:55:07.656Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 17911,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 3198,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 4314,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5342,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4348,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787205247951-wvooth",
+    "timestamp": "2026-08-20T05:54:25.670Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 17719,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4011,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3480,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4202,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5129,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787205201879-l9u4f3",
+    "timestamp": "2026-08-20T05:53:41.914Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20035,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4492,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3513,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5733,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5489,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787204857312-884rmt",
+    "timestamp": "2026-08-20T05:47:55.130Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 17817,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 3952,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3755,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 4951,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5083,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787204694959-nc3lyi",
+    "timestamp": "2026-08-20T05:45:13.240Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 18282,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4182,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3773,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5317,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4890,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787204640683-n5q82j",
+    "timestamp": "2026-08-20T05:44:20.586Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 19902,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 5325,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3780,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 5626,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5049,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787204510975-s5ecs4",
+    "timestamp": "2026-08-20T05:42:12.290Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 21315,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4012,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 5334,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 6949,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4916,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787204421120-pk246y",
+    "timestamp": "2026-08-20T05:40:41.559Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 20440,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 4978,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 3835,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 6048,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 5346,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787203209676-wsfmxy",
+    "timestamp": "2026-08-20T05:22:33.373Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 143697,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 9451,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 33473,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 57637,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 31377,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787203105866-28cks6",
+    "timestamp": "2026-08-20T05:19:42.360Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 76494,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 6997,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 27398,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 24323,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 4149,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787202719852-rbt9lu",
+    "timestamp": "2026-08-20T05:14:37.001Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 157148,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 17405,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 39999,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 37702,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 13990,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787202533846-cj09td",
+    "timestamp": "2026-08-20T05:11:07.967Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 134120,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 14563,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 32339,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 35692,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 13982,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787201666042-vl722a",
+    "timestamp": "2026-08-20T04:56:58.731Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 152689,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 19960,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 45876,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 40058,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10277,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787201433090-kkbmhm",
+    "timestamp": "2026-08-20T04:52:47.627Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 134536,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 14151,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 33081,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 35566,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 13420,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787145496991-2echth",
+    "timestamp": "2026-08-19T13:21:24.135Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 187143,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 33425,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 92183,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 48259,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 13211,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787145374598-egsdwp",
+    "timestamp": "2026-08-19T13:20:36.262Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 261661,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 39946,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 97454,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 94923,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 29267,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787145346641-dp9bpu",
+    "timestamp": "2026-08-19T13:20:11.146Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 264503,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 31198,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 111825,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 88677,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 32760,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787145290783-q0f9ux",
+    "timestamp": "2026-08-19T13:18:18.922Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 208138,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 13242,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 47371,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 115210,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 31968,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787144233264-xvry5r",
+    "timestamp": "2026-08-19T12:58:42.937Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 89672,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 12798,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 33459,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 34389,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 8950,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787144122863-mopums",
+    "timestamp": "2026-08-19T12:56:59.315Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 96451,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11810,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 36969,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 36330,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 11281,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787144007424-knop57",
+    "timestamp": "2026-08-19T12:55:06.771Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 99347,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 14366,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 38122,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 33073,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 13346,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787137698276-9l8dyg",
+    "timestamp": "2026-08-19T11:11:12.564Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 174287,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 16790,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 78846,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 60981,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 17338,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787134498296-6197of",
+    "timestamp": "2026-08-19T10:16:09.401Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 71105,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 9111,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 29949,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 25039,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 6948,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787134113065-j3bm68",
+    "timestamp": "2026-08-19T10:10:03.960Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 90894,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 12600,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 34577,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 35894,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7722,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787134001496-d3f30e",
+    "timestamp": "2026-08-19T10:07:40.885Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 59389,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 9004,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 25506,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 17327,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7437,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787133885937-4a2mp7",
+    "timestamp": "2026-08-19T10:06:28.838Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 102901,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 16948,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 36961,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 37182,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 11444,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787132032862-dluvpf",
+    "timestamp": "2026-08-19T09:35:07.577Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 74715,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8984,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 10401,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 45166,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10163,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787117265424-gva4ab",
+    "timestamp": "2026-08-19T05:28:32.652Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 47228,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 15658,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8955,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 12881,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9734,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787116212600-gvk24n",
+    "timestamp": "2026-08-19T05:10:57.437Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 44837,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11585,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 10924,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 13053,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9274,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787114916190-0lruao",
+    "timestamp": "2026-08-19T04:49:20.950Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 44760,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 13216,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 9739,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 11735,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10069,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787113940507-akhm3l",
+    "timestamp": "2026-08-19T04:33:08.132Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 47625,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8456,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8372,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 19880,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10916,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787113839346-df0aqc",
+    "timestamp": "2026-08-19T04:31:18.190Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 38844,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8959,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 7383,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 13329,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9172,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787113785604-cf6vr1",
+    "timestamp": "2026-08-19T04:30:27.878Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 42274,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 10978,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 7136,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 12378,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 11782,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787113428397-4veq4t",
+    "timestamp": "2026-08-19T04:24:24.536Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 36140,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 10961,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 6369,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 8392,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10417,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787113371337-6qw4z8",
+    "timestamp": "2026-08-19T04:23:30.957Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 39620,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11498,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 6740,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 10562,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10819,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787112426808-mu11uh",
+    "timestamp": "2026-08-19T04:07:48.198Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 41390,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11096,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 7117,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 12626,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10550,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787112347056-8xx4sc",
+    "timestamp": "2026-08-19T04:06:32.278Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 45222,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11729,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 9787,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 12769,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10935,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787111939114-sj9qgn",
+    "timestamp": "2026-08-19T03:59:43.712Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 44598,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 13132,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 9674,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 10498,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 11293,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787111844615-c38ciu",
+    "timestamp": "2026-08-19T03:58:21.916Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 57301,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 15212,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 13191,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 14819,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 14078,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787111320459-eyguef",
+    "timestamp": "2026-08-19T03:49:54.520Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 74061,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 21036,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 17724,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 15878,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 19423,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787106569043-rf6mmg",
+    "timestamp": "2026-08-19T02:30:31.228Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 62185,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 16743,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 14810,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 14635,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 15996,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1787055133323-snocue",
+    "timestamp": "2026-08-18T12:12:56.675Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 43353,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 13164,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 11009,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 9737,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9442,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689757868-6xopm6",
+    "timestamp": "2026-08-14T06:43:29.547Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 51678,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11593,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 13786,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 14001,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 12298,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689719152-phazh5",
+    "timestamp": "2026-08-14T06:42:37.868Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 38716,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8537,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 9955,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 10046,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 10178,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689625694-q9gv72",
+    "timestamp": "2026-08-14T06:41:59.149Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 93453,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 26325,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 26137,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 27587,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 13405,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689593134-8tolph",
+    "timestamp": "2026-08-14T06:41:31.725Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 98589,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 22058,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 22170,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 27170,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 27191,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689545231-4v00vn",
+    "timestamp": "2026-08-14T06:40:25.691Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 80459,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 19264,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 19863,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 19238,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 22094,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689517274-0qdxxe",
+    "timestamp": "2026-08-14T06:39:53.127Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 75853,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 18724,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 18719,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 18752,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 19658,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689456189-ajpdpz",
+    "timestamp": "2026-08-14T06:39:05.226Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 89036,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 22773,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 25047,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 24849,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 16367,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689422116-0hzrz0",
+    "timestamp": "2026-08-14T06:38:37.272Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 95154,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 23199,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 23688,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 23907,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 24361,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689369929-jupl0p",
+    "timestamp": "2026-08-14T06:37:36.186Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 86256,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 21563,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 19720,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 21029,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 23944,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689333395-7ohzk1",
+    "timestamp": "2026-08-14T06:37:02.115Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 88720,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 23928,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 22785,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 20723,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 21284,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689272838-qoqp3z",
+    "timestamp": "2026-08-14T06:36:09.927Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 97088,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 25938,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 23028,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 24335,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 23787,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689232247-d48p04",
+    "timestamp": "2026-08-14T06:35:33.392Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 101147,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 26663,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 26441,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 24470,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 23572,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689164861-lectpx",
+    "timestamp": "2026-08-14T06:34:32.837Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 107989,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 25061,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 30175,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 26457,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 26288,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689133079-43l1iv",
+    "timestamp": "2026-08-14T06:33:52.241Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 99174,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 21141,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 21752,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 28974,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 27307,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689075945-pa5l7r",
+    "timestamp": "2026-08-14T06:32:44.857Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 88911,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 22095,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 21900,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 22946,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 21970,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786689044164-c4duoe",
+    "timestamp": "2026-08-14T06:32:13.076Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 88911,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 22930,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 21472,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 21891,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 22617,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688977849-p7zxzd",
+    "timestamp": "2026-08-14T06:31:15.941Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 98089,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 26571,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 24651,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 24049,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 22817,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688938463-9ia0o8",
+    "timestamp": "2026-08-14T06:30:44.160Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 105696,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 36603,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 17107,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 26698,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 25287,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688881656-y9x3x4",
+    "timestamp": "2026-08-14T06:28:58.460Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 56803,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 9464,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 10508,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 10293,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 26538,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688847579-egdfuk",
+    "timestamp": "2026-08-14T06:28:01.654Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 34074,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 7836,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8332,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 8243,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9662,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688803938-e7vwyt",
+    "timestamp": "2026-08-14T06:27:13.178Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 29239,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 6495,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8418,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 6632,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7695,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688771459-67ia96",
+    "timestamp": "2026-08-14T06:26:43.937Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 32477,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8614,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8056,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 7832,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7975,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688621168-w0y6tw",
+    "timestamp": "2026-08-14T06:24:28.001Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 46832,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11971,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 11138,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 12085,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 11637,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688387578-2mvz72",
+    "timestamp": "2026-08-14T06:20:20.025Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 32446,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8190,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8617,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 7679,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7959,
+        "status": "success"
+      }
+    ],
+    "success": true
+  }
+]

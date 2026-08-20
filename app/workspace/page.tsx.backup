@@ -1,0 +1,557 @@
+"use client";
+
+import { useState } from "react";
+
+import DashboardHeader from "@/components/ai/DashboardHeader";
+import RuntimeCard from "@/components/ai/RuntimeCard";
+import HealthCard from "@/components/ai/HealthCard";
+import MetricsCard from "@/components/ai/MetricsCard";
+
+import PromptBox from "@/components/workspace/PromptBox";
+import MarkdownViewer from "@/components/workspace/MarkdownViewer";
+import WorkspaceTabs from "@/components/workspace/WorkspaceTabs";
+
+import ResearchDashboard from "@/components/research/ResearchDashboard";
+import EdgeTelemetry from "@/components/research/EdgeTelemetry";
+
+type WorkspaceView =
+  | "teaching"
+  | "analytics"
+  | "metrics";
+
+export default function WorkspacePage() {
+
+  // ============================================================
+  // TOP-LEVEL WORKSPACE VIEW
+  // ============================================================
+
+  const [view, setView] =
+    useState<WorkspaceView>("teaching");
+
+
+  // ============================================================
+  // GENERATED TEACHING CONTENT
+  // ============================================================
+
+  const [lesson, setLesson] =
+    useState("");
+
+  const [worksheet, setWorksheet] =
+    useState("");
+
+  const [quiz, setQuiz] =
+    useState("");
+
+  const [teacher, setTeacher] =
+    useState("");
+
+
+  // ============================================================
+  // CONTENT TAB
+  // ============================================================
+
+  const [activeContentTab, setActiveContentTab] =
+    useState("Lesson");
+
+
+  return (
+
+    <main className="min-h-screen bg-slate-900 text-white">
+
+      {/* ====================================================== */}
+      {/* MAIN CONTENT                                           */}
+      {/* ====================================================== */}
+
+      <section className="mx-auto min-h-screen max-w-[1800px] overflow-y-auto px-6 py-8 lg:px-10 lg:py-10">
+
+
+        {/* ==================================================== */}
+        {/* SRIMATHY HEADER                                      */}
+        {/* ==================================================== */}
+
+        <DashboardHeader />
+
+
+        {/* ==================================================== */}
+        {/* PRIMARY WORKSPACE NAVIGATION                         */}
+        {/* ==================================================== */}
+
+        <div className="mt-8 border-b border-slate-800">
+
+          <div className="flex gap-8">
+
+            {/* ------------------------------------------------ */}
+            {/* TEACHING WORKSPACE                               */}
+            {/* ------------------------------------------------ */}
+
+            <button
+              type="button"
+              onClick={() =>
+                setView("teaching")
+              }
+              className={`
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
+                ${
+                  view === "teaching"
+                    ? "text-cyan-400"
+                    : "text-slate-400 hover:text-white"
+                }
+              `}
+            >
+
+              🎓 Teaching Workspace
+
+              {view === "teaching" && (
+
+                <span
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    right-0
+                    h-0.5
+                    bg-cyan-400
+                  "
+                />
+
+              )}
+
+            </button>
+
+
+            {/* ------------------------------------------------ */}
+            {/* ANALYTICS                                        */}
+            {/* ------------------------------------------------ */}
+
+            <button
+              type="button"
+              onClick={() =>
+                setView("analytics")
+              }
+              className={`
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
+                ${
+                  view === "analytics"
+                    ? "text-cyan-400"
+                    : "text-slate-400 hover:text-white"
+                }
+              `}
+            >
+
+              📊 Analytics
+
+              {view === "analytics" && (
+
+                <span
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    right-0
+                    h-0.5
+                    bg-cyan-400
+                  "
+                />
+
+              )}
+
+            </button>
+
+
+            {/* ------------------------------------------------ */}
+            {/* AI METRICS                                       */}
+            {/* ------------------------------------------------ */}
+
+            <button
+              type="button"
+              onClick={() =>
+                setView("metrics")
+              }
+              className={`
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
+                ${
+                  view === "metrics"
+                    ? "text-cyan-400"
+                    : "text-slate-400 hover:text-white"
+                }
+              `}
+            >
+
+              🤖 AI Metrics
+
+              {view === "metrics" && (
+
+                <span
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    right-0
+                    h-0.5
+                    bg-cyan-400
+                  "
+                />
+
+              )}
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        {/* ==================================================== */}
+        {/* ==================================================== */}
+        {/* TEACHING WORKSPACE                                   */}
+        {/* ==================================================== */}
+        {/* ==================================================== */}
+
+        {view === "teaching" && (
+
+          <section className="mt-8">
+
+            {/* ------------------------------------------------ */}
+            {/* SECTION HEADER                                   */}
+            {/* ------------------------------------------------ */}
+
+            <div className="mb-6">
+
+              <h2 className="text-3xl font-bold text-white">
+
+                🎓 Teaching Workspace
+
+              </h2>
+
+              <p className="mt-2 text-slate-400">
+
+                Generate curriculum-aligned learning
+                content using the local multi-agent system.
+
+              </p>
+
+            </div>
+
+
+            {/* ------------------------------------------------ */}
+            {/* PROMPT / GENERATION                              */}
+            {/* ------------------------------------------------ */}
+
+            <PromptBox
+              onLessonGenerated={setLesson}
+              onWorksheetGenerated={setWorksheet}
+              onQuizGenerated={setQuiz}
+              onTeacherGenerated={setTeacher}
+            />
+
+
+            {/* ------------------------------------------------ */}
+            {/* GENERATED CONTENT TABS                           */}
+            {/* ------------------------------------------------ */}
+
+            <div className="mt-8">
+
+              <WorkspaceTabs
+                activeTab={activeContentTab}
+                onTabChange={setActiveContentTab}
+              />
+
+            </div>
+
+
+            {/* ------------------------------------------------ */}
+            {/* LESSON                                           */}
+            {/* ------------------------------------------------ */}
+
+            {activeContentTab === "Lesson" &&
+              lesson && (
+
+                <div className="mt-8">
+
+                  <MarkdownViewer
+                    markdown={lesson}
+                  />
+
+                </div>
+
+              )}
+
+
+            {/* ------------------------------------------------ */}
+            {/* WORKSHEET                                        */}
+            {/* ------------------------------------------------ */}
+
+            {activeContentTab === "Worksheet" &&
+              worksheet && (
+
+                <div className="mt-8">
+
+                  <MarkdownViewer
+                    markdown={worksheet}
+                  />
+
+                </div>
+
+              )}
+
+
+            {/* ------------------------------------------------ */}
+            {/* QUIZ                                             */}
+            {/* ------------------------------------------------ */}
+
+            {activeContentTab === "Quiz" &&
+              quiz && (
+
+                <div className="mt-8">
+
+                  <MarkdownViewer
+                    markdown={quiz}
+                  />
+
+                </div>
+
+              )}
+
+
+            {/* ------------------------------------------------ */}
+            {/* TEACHER NOTES                                    */}
+            {/* ------------------------------------------------ */}
+
+            {activeContentTab === "Teacher Notes" &&
+              teacher && (
+
+                <div className="mt-8">
+
+                  <MarkdownViewer
+                    markdown={teacher}
+                  />
+
+                </div>
+
+              )}
+
+
+            {/* ------------------------------------------------ */}
+            {/* EMPTY STATE                                      */}
+            {/* ------------------------------------------------ */}
+
+            {!lesson &&
+              !worksheet &&
+              !quiz &&
+              !teacher && (
+
+                <div
+                  className="
+                    mt-8
+                    rounded-2xl
+                    border
+                    border-slate-800
+                    bg-slate-950/40
+                    p-10
+                    text-center
+                  "
+                >
+
+                  <div className="text-4xl">
+                    🎓
+                  </div>
+
+                  <h3
+                    className="
+                      mt-4
+                      text-xl
+                      font-semibold
+                      text-white
+                    "
+                  >
+                    Ready to teach
+                  </h3>
+
+                  <p
+                    className="
+                      mx-auto
+                      mt-2
+                      max-w-xl
+                      text-sm
+                      text-slate-500
+                    "
+                  >
+                    Enter a topic above to generate a
+                    lesson, worksheet, quiz and teacher
+                    guidance using SRIMATHY's local
+                    multi-agent system.
+                  </p>
+
+                </div>
+
+              )}
+
+          </section>
+
+        )}
+
+
+        {/* ==================================================== */}
+        {/* ==================================================== */}
+        {/* ANALYTICS                                           */}
+        {/* ==================================================== */}
+        {/* ==================================================== */}
+
+        {view === "analytics" && (
+
+          <section className="mt-8">
+
+            {/* ------------------------------------------------ */}
+            {/* ANALYTICS HEADER                                 */}
+            {/* ------------------------------------------------ */}
+
+            <div className="mb-6">
+
+              <h2 className="text-3xl font-bold text-white">
+
+                📊 Research & Analytics
+
+              </h2>
+
+              <p className="mt-2 text-slate-400">
+
+                Live experimental telemetry and deployment
+                comparison across local and cloud AI runtimes.
+
+              </p>
+
+            </div>
+
+
+            {/* ------------------------------------------------ */}
+            {/* RESEARCH DASHBOARD                               */}
+            {/* ------------------------------------------------ */}
+
+            <ResearchDashboard />
+
+          </section>
+
+        )}
+
+
+        {/* ==================================================== */}
+        {/* ==================================================== */}
+        {/* AI METRICS                                          */}
+        {/* ==================================================== */}
+        {/* ==================================================== */}
+
+        {view === "metrics" && (
+
+          <section className="mt-8">
+
+            {/* ------------------------------------------------ */}
+            {/* METRICS HEADER                                   */}
+            {/* ------------------------------------------------ */}
+
+            <div className="mb-6">
+
+              <h2 className="text-3xl font-bold text-white">
+
+                🤖 AI Runtime Metrics
+
+              </h2>
+
+              <p className="mt-2 text-slate-400">
+
+                Live runtime health, model telemetry and
+                edge-resource measurements.
+
+              </p>
+
+            </div>
+
+
+            {/* ------------------------------------------------ */}
+            {/* RUNTIME + HEALTH                                */}
+            {/* ------------------------------------------------ */}
+
+            <div
+              className="
+                grid
+                grid-cols-1
+                gap-6
+                lg:grid-cols-2
+              "
+            >
+
+              <RuntimeCard />
+
+              <HealthCard />
+
+            </div>
+
+
+            {/* ------------------------------------------------ */}
+            {/* SYSTEM METRICS                                  */}
+            {/* ------------------------------------------------ */}
+
+            <div className="mt-6">
+
+              <MetricsCard />
+
+            </div>
+
+
+            {/* ------------------------------------------------ */}
+            {/* EDGE TELEMETRY                                  */}
+            {/* ------------------------------------------------ */}
+
+            <div className="mt-6">
+
+              <EdgeTelemetry />
+
+            </div>
+
+          </section>
+
+        )}
+
+
+        {/* ==================================================== */}
+        {/* FOOTER                                              */}
+        {/* ==================================================== */}
+
+        <footer className="mt-16 border-t border-slate-800 pt-6 pb-4">
+
+          <div
+            className="
+              flex
+              flex-col
+              items-center
+              justify-between
+              gap-3
+              text-xs
+              text-slate-600
+              md:flex-row
+            "
+          >
+
+            <div>
+              SRIMATHY • Offline-First Edge AI
+            </div>
+
+            <div>
+              Local SLM Inference • Multi-Agent AI •
+              Research Instrumentation
+            </div>
+
+          </div>
+
+        </footer>
+
+      </section>
+
+    </main>
+  );
+}

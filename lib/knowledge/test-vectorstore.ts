@@ -1,20 +1,43 @@
-import { getKnowledgeCollection } from "../lib/knowledge/vectorStore";
+import {
+  getKnowledgeCollection,
+} from "./vectorStore";
 
 async function main() {
-    console.log("Connecting to ChromaDB...");
 
-    const collection = await getKnowledgeCollection();
+  console.log(
+    "Connecting to ChromaDB..."
+  );
 
-    console.log("Collection created/found:");
-    console.log("Name:", collection.name);
+  const collection =
+    await getKnowledgeCollection();
 
-    const count = await collection.count();
+  console.log(
+    "Collection created/found:"
+  );
 
-    console.log("Current documents:", count);
+  console.log(
+    "Name:",
+    collection.name
+  );
+
+  const count =
+    await collection.count();
+
+  console.log(
+    "Current documents:",
+    count
+  );
 }
 
-main().catch((error) => {
-    console.error("Vector store test failed:");
+main().catch(
+  (error) => {
+
+    console.error(
+      "Vector store test failed:"
+    );
+
     console.error(error);
+
     process.exit(1);
-});
+  }
+);

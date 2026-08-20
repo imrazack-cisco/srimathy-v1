@@ -1,81 +1,247 @@
-import { NextRequest, NextResponse } from "next/server";
-import { masterAgent } from "@/agents/master";
-import { runtimeMetrics } from "@/app/lib/runtimeMetrics";
+import {
+  NextRequest,
+  NextResponse,
+} from "next/server";
 
-export async function POST(req: NextRequest) {
+import {
+  masterAgent,
+} from "@/agents/master";
+
+import {
+  RetrievalContext,
+} from "@/lib/knowledge/retriever/chromaRetriever";
+
+
+export async function POST(
+  request: NextRequest
+) {
+
   try {
-    const body = await req.json();
+
+    // ========================================================
+    // 1. READ REQUEST
+    // ========================================================
+
+    const body =
+      await request.json();
+
 
     const prompt =
-      body.prompt ??
-      body.message ??
-      body.input ??
-      "";
+      typeof body.prompt === "string"
+        ? body.prompt.trim()
+        : "";
+
 
     if (!prompt) {
+
       return NextResponse.json(
         {
           success: false,
-          error: "Prompt is missing.",
+
+          error:
+            "Prompt is required.",
         },
-        { status: 400 }
+
+        {
+          status: 400,
+        }
       );
+
     }
 
-    console.log("\n======================================");
-    console.log("📩 Incoming Prompt");
-    console.log("======================================");
-    console.log(prompt);
-    
-    const start = Date.now();
-    const result = await masterAgent({
-      topic: prompt,
-    });
 
-    const responseTime = Date.now() - start;
-    runtimeMetrics.increment(prompt, responseTime);
+    // ========================================================
+    // 2. CURRICULUM
+    // ========================================================
 
-    console.log("\n======================================");
-    console.log("✅ MASTER RESULT");
-    console.log("======================================");
+    const curriculum =
+      body.curriculum as
+        | RetrievalContext
+        | undefined;
 
-    console.dir(result, { depth: null });
 
-    console.log("\nLesson Exists    :", !!result.lesson);
-    console.log("Worksheet Exists :", !!result.worksheet);
-    console.log("Quiz Exists      :", !!result.quiz);
-    console.log("Teacher Exists   :", !!result.teacher);
+    // ========================================================
+    // 3. CONVERSATION HISTORY
+    // ========================================================
 
-    console.log("\nLesson Length    :", result.lesson?.content?.length ?? 0);
-    console.log("Worksheet Length :", result.worksheet?.content?.length ?? 0);
-    console.log("Quiz Length      :", result.quiz?.content?.length ?? 0);
-    console.log("Teacher Length   :", result.teacher?.content?.length ?? 0);
+    const history =
+      Array.isArray(body.history)
+        ? body.history
+        : [];
 
-    console.log("\n======================================\n");
+
+    // ========================================================
+    // 4. REQUEST LOGGING
+    // ========================================================
+
+    console.log(
+      "\n======================================"
+    );
+
+    console.log(
+      "📩 SRIMATHY AGENT REQUEST"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+    console.log(
+      "Prompt:",
+      prompt
+    );
+
+    console.log(
+      "Curriculum:",
+      curriculum
+    );
+
+    console.log(
+      "History turns:",
+      history.length
+    );
+
+
+    // ========================================================
+    // 5. MASTER AGENT
+    // ========================================================
+
+    const result =
+      await masterAgent({
+
+        topic:
+          prompt,
+
+        curriculum:
+          curriculum,
+
+        history:
+          history,
+
+      });
+
+
+    // ========================================================
+    // 6. LIVE RUNTIME TELEMETRY
+    // ========================================================
+
+    console.log(
+      "\n======================================"
+    );
+
+    console.log(
+      "🎯 SRIMATHY ACTIVE RUNTIME"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+    console.log(
+      "Provider:",
+      result.runtime?.provider ??
+      "unknown"
+    );
+
+    console.log(
+      "Model:",
+      result.runtime?.model ??
+      "unknown"
+    );
+
+    console.log(
+      "Runtime:",
+      result.runtime?.runtime ??
+      "unknown"
+    );
+
+    console.log(
+      "Fallback:",
+      result.runtime?.fallback ??
+      false
+    );
+
+    console.log(
+      "Latency:",
+      result.runtime?.totalLatencyMs ??
+      0,
+      "ms"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+
+    // ========================================================
+    // 7. API RESPONSE
+    // ========================================================
 
     return NextResponse.json({
-      success: true,
-      data: result,
+
+      success:
+        true,
+
+      data:
+        result,
+
+      curriculum:
+        result.curriculum,
+
+      retrieval:
+        result.retrieval,
+
+      research:
+        result.research,
+
+      runtime:
+        result.runtime,
+
     });
+
 
   } catch (error) {
 
-    console.error("\n======================================");
-    console.error("❌ ROUTE ERROR");
-    console.error("======================================");
-    console.error(error);
+    console.error(
+      "\n======================================"
+    );
+
+    console.error(
+      "❌ /api/agent failed"
+    );
+
+    console.error(
+      "======================================"
+    );
+
+    console.error(
+      error
+    );
+
 
     return NextResponse.json(
+
       {
-        success: false,
+
+        success:
+          false,
+
         error:
           error instanceof Error
             ? error.message
-            : "Unknown server error",
+            : "SRIMATHY agent failed.",
+
       },
-      { status: 500 }
+
+      {
+
+        status:
+          500,
+
+      }
+
     );
+
   }
+
 }
-
-

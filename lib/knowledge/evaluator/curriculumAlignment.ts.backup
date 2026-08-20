@@ -1,0 +1,773 @@
+import {
+  retrieveKnowledge,
+  RetrievedChunk,
+} from "../retriever/chromaRetriever";
+
+import {
+  semanticSimilarity,
+} from "./similarity";
+
+
+export interface CurriculumAlignmentResult {
+
+  score: number;
+
+  semanticSimilarity: number;
+
+  topicCoverage: number;
+
+  referenceChunks: number;
+
+  unsupportedContent: number;
+
+  confidence: number;
+
+  /**
+   * Estimated percentage of generated statements
+   * that are not sufficiently supported by the
+   * retrieved curriculum references.
+   *
+   * IMPORTANT:
+   * This is a grounding-risk metric, not a claim
+   * of factual incorrectness.
+   */
+  hallucinationRisk: number;
+
+  status:
+    | "GOOD"
+    | "MODERATE"
+    | "LOW"
+    | "NO_REFERENCE";
+
+  hallucinationStatus:
+    | "LOW"
+    | "MODERATE"
+    | "HIGH"
+    | "VERY_HIGH";
+
+  references: Array<{
+    id: string;
+    similarity: number;
+    distance: number;
+    source: string;
+    page: string;
+    text: string;
+  }>;
+
+}
+
+
+/**
+ * Split generated content into semantic units.
+ */
+function splitIntoStatements(
+  text: string
+): string[] {
+
+  return text
+
+    .replace(
+      /```[\s\S]*?```/g,
+      ""
+    )
+
+    .split(
+      /(?<=[.!?])\s+|\n+/
+    )
+
+    .map(
+      value =>
+        value
+          .replace(
+            /^[-*#\d.)\s]+/,
+            ""
+          )
+          .trim()
+    )
+
+    .filter(
+      value =>
+        value.length >= 20
+    );
+
+}
+
+
+/**
+ * Convert Chroma metadata into safe strings.
+ */
+function metadataValue(
+  metadata: Record<string, unknown>,
+  key: string
+): string {
+
+  const value =
+    metadata[key];
+
+  if (
+    value === undefined ||
+    value === null
+  ) {
+    return "";
+  }
+
+  return String(value);
+}
+
+
+/**
+ * Convert grounding risk into a human-readable category.
+ */
+function getHallucinationStatus(
+  risk: number
+):
+  | "LOW"
+  | "MODERATE"
+  | "HIGH"
+  | "VERY_HIGH" {
+
+  if (risk <= 20) {
+    return "LOW";
+  }
+
+  if (risk <= 40) {
+    return "MODERATE";
+  }
+
+  if (risk <= 70) {
+    return "HIGH";
+  }
+
+  return "VERY_HIGH";
+}
+
+
+/**
+ * Evaluate generated teaching content against
+ * the local NCERT knowledge base.
+ *
+ * IMPORTANT:
+ *
+ * This evaluator measures:
+ *
+ *   generated content
+ *          ↓
+ *   retrieved NCERT references
+ *          ↓
+ *   semantic / lexical similarity
+ *          ↓
+ *   grounding coverage
+ *
+ * It does NOT prove factual correctness.
+ *
+ * HallucinationRisk means:
+ *
+ * "How much of the generated content was not
+ * sufficiently supported by the retrieved
+ * curriculum references?"
+ */
+export async function evaluateCurriculumAlignment(
+  generatedText: string,
+  topic: string,
+  topK: number = 5
+): Promise<CurriculumAlignmentResult> {
+
+  console.log(
+    "\n======================================"
+  );
+
+  console.log(
+    "📚 CURRICULUM ALIGNMENT EVALUATION"
+  );
+
+  console.log(
+    "======================================"
+  );
+
+  console.log(
+    "Topic:",
+    topic
+  );
+
+
+  // ==========================================================
+  // 1. RETRIEVE CURRICULUM REFERENCES
+  // ==========================================================
+
+  let chunks:
+    RetrievedChunk[] = [];
+
+  try {
+
+    chunks =
+      await retrieveKnowledge(
+        topic,
+        topK
+      );
+
+  } catch (error) {
+
+    console.warn(
+      "⚠ Curriculum retrieval unavailable."
+    );
+
+    console.warn(
+      "Reason:",
+      error instanceof Error
+        ? error.message
+        : String(error)
+    );
+
+    chunks = [];
+
+  }
+
+
+  const statements =
+    splitIntoStatements(
+      generatedText
+    );
+
+
+  // ==========================================================
+  // 2. NO REFERENCE CASE
+  // ==========================================================
+
+  if (
+    chunks.length === 0
+  ) {
+
+    const unsupported =
+      statements.length;
+
+    /*
+     * If there is no reference corpus,
+     * we cannot establish grounding.
+     *
+     * This is therefore HIGH grounding risk,
+     * not LOW.
+     */
+
+    const hallucinationRisk =
+      statements.length > 0
+        ? 100
+        : 0;
+
+    const hallucinationStatus =
+      getHallucinationStatus(
+        hallucinationRisk
+      );
+
+    console.warn(
+      "⚠ No curriculum references found."
+    );
+
+    console.log(
+      "Hallucination Risk:",
+      `${hallucinationRisk}%`
+    );
+
+    console.log(
+      "Hallucination Status:",
+      hallucinationStatus
+    );
+
+    return {
+
+      score: 0,
+
+      semanticSimilarity: 0,
+
+      topicCoverage: 0,
+
+      referenceChunks: 0,
+
+      unsupportedContent:
+        unsupported,
+
+      confidence: 0,
+
+      hallucinationRisk,
+
+      status:
+        "NO_REFERENCE",
+
+      hallucinationStatus,
+
+      references: [],
+
+    };
+
+  }
+
+
+  // ==========================================================
+  // 3. COMPARE GENERATED STATEMENTS
+  // ==========================================================
+
+  const statementScores:
+    number[] = [];
+
+
+  let semanticComparisons = 0;
+
+  let lexicalFallbackComparisons = 0;
+
+
+  for (
+    const statement of statements
+  ) {
+
+    let bestSimilarity = 0;
+
+
+    for (
+      const chunk of chunks
+    ) {
+
+      try {
+
+        const result =
+          await semanticSimilarity(
+            statement,
+            chunk.text
+          );
+
+
+        const similarity =
+          Number(
+            result.similarity ?? 0
+          );
+
+
+        if (
+          similarity >
+          bestSimilarity
+        ) {
+
+          bestSimilarity =
+            similarity;
+
+        }
+
+
+        /*
+         * If similarity is non-zero,
+         * count this as a usable comparison.
+         *
+         * Your similarity implementation may
+         * internally use lexical fallback when
+         * Ollama embeddings are unavailable.
+         */
+
+        if (
+          similarity > 0
+        ) {
+
+          semanticComparisons++;
+
+        }
+
+      } catch {
+
+        /*
+         * Never allow evaluator failure
+         * to break content generation.
+         *
+         * The evaluator is secondary to
+         * the teaching system.
+         */
+
+        lexicalFallbackComparisons++;
+
+      }
+
+    }
+
+
+    statementScores.push(
+      bestSimilarity
+    );
+
+  }
+
+
+  // ==========================================================
+  // 4. SEMANTIC / GROUNDING ALIGNMENT
+  // ==========================================================
+
+  const averageSimilarity =
+
+    statementScores.length > 0
+
+      ? statementScores.reduce(
+          (
+            sum,
+            value
+          ) =>
+            sum + value,
+          0
+        ) /
+        statementScores.length
+
+      : 0;
+
+
+  // ==========================================================
+  // 5. TOPIC COVERAGE
+  // ==========================================================
+
+  const COVERAGE_THRESHOLD =
+    0.65;
+
+
+  const supportedStatements =
+    statementScores.filter(
+      score =>
+        score >=
+        COVERAGE_THRESHOLD
+    ).length;
+
+
+  const topicCoverage =
+
+    statementScores.length > 0
+
+      ? supportedStatements /
+        statementScores.length
+
+      : 0;
+
+
+  // ==========================================================
+  // 6. UNSUPPORTED CONTENT
+  // ==========================================================
+
+  const unsupportedContent =
+    statementScores.filter(
+      score =>
+        score <
+        COVERAGE_THRESHOLD
+    ).length;
+
+
+  // ==========================================================
+  // 7. HALLUCINATION / GROUNDING RISK
+  // ==========================================================
+
+  /*
+   * HallucinationRisk is based on the percentage
+   * of generated statements that are not sufficiently
+   * grounded in retrieved curriculum references.
+   *
+   * Example:
+   *
+   * 100 statements
+   * 90 supported
+   * 10 unsupported
+   *
+   * Risk = 10%
+   *
+   * This is much more meaningful than calling
+   * unsupported content "LOW" risk.
+   */
+
+  const hallucinationRisk =
+    statements.length > 0
+
+      ? Math.round(
+          (
+            unsupportedContent /
+            statements.length
+          ) * 100
+        )
+
+      : 0;
+
+
+  const hallucinationStatus =
+    getHallucinationStatus(
+      hallucinationRisk
+    );
+
+
+  // ==========================================================
+  // 8. COMPOSITE ALIGNMENT SCORE
+  // ==========================================================
+
+  const score =
+    Math.round(
+
+      (
+        averageSimilarity *
+          0.6 +
+
+        topicCoverage *
+          0.4
+
+      ) * 100
+
+    );
+
+
+  // ==========================================================
+  // 9. CONFIDENCE
+  // ==========================================================
+
+  const confidence =
+    Math.round(
+
+      Math.min(
+        1,
+
+        (
+          averageSimilarity *
+          0.7
+        ) +
+
+        (
+          topicCoverage *
+          0.3
+        )
+
+      ) * 100
+
+    );
+
+
+  // ==========================================================
+  // 10. ALIGNMENT STATUS
+  // ==========================================================
+
+  let status:
+    | "GOOD"
+    | "MODERATE"
+    | "LOW";
+
+
+  if (
+    score >= 80
+  ) {
+
+    status = "GOOD";
+
+  } else if (
+    score >= 60
+  ) {
+
+    status = "MODERATE";
+
+  } else {
+
+    status = "LOW";
+
+  }
+
+
+  // ==========================================================
+  // 11. REFERENCE INFORMATION
+  // ==========================================================
+
+  const references =
+    await Promise.all(
+
+      chunks.map(
+        async (
+          chunk: RetrievedChunk
+        ) => {
+
+          try {
+
+            const result =
+              await semanticSimilarity(
+                generatedText,
+                chunk.text
+              );
+
+
+            return {
+
+              id:
+                chunk.id,
+
+              similarity:
+                Number(
+                  result.similarity ?? 0
+                ),
+
+              distance:
+                chunk.distance,
+
+              source:
+                metadataValue(
+                  chunk.metadata,
+                  "source"
+                ),
+
+              page:
+                metadataValue(
+                  chunk.metadata,
+                  "page"
+                ),
+
+              text:
+                chunk.text,
+
+            };
+
+          } catch {
+
+            return {
+
+              id:
+                chunk.id,
+
+              similarity: 0,
+
+              distance:
+                chunk.distance,
+
+              source:
+                metadataValue(
+                  chunk.metadata,
+                  "source"
+                ),
+
+              page:
+                metadataValue(
+                  chunk.metadata,
+                  "page"
+                ),
+
+              text:
+                chunk.text,
+
+            };
+
+          }
+
+        }
+      )
+
+    );
+
+
+  // ==========================================================
+  // 12. EVALUATION LOG
+  // ==========================================================
+
+  console.log(
+    "\n======================================"
+  );
+
+  console.log(
+    "📊 EVALUATION RESULT"
+  );
+
+  console.log(
+    "======================================"
+  );
+
+  console.log(
+    "Generated statements:",
+    statements.length
+  );
+
+  console.log(
+    "Reference chunks:",
+    chunks.length
+  );
+
+  console.log(
+    "Semantic comparisons:",
+    semanticComparisons
+  );
+
+  console.log(
+    "Lexical fallback comparisons:",
+    lexicalFallbackComparisons
+  );
+
+  console.log(
+    "Average similarity:",
+    averageSimilarity.toFixed(3)
+  );
+
+  console.log(
+    "Topic coverage:",
+    `${Math.round(
+      topicCoverage * 100
+    )}%`
+  );
+
+  console.log(
+    "Unsupported statements:",
+    unsupportedContent
+  );
+
+  console.log(
+    "Alignment:",
+    `${score}%`
+  );
+
+  console.log(
+    "Confidence:",
+    `${confidence}%`
+  );
+
+  console.log(
+    "Hallucination Risk:",
+    `${hallucinationRisk}%`
+  );
+
+  console.log(
+    "Hallucination Status:",
+    hallucinationStatus
+  );
+
+  console.log(
+    "Status:",
+    status
+  );
+
+  console.log(
+    "======================================"
+  );
+
+
+  // ==========================================================
+  // 13. RETURN
+  // ==========================================================
+
+  return {
+
+    score,
+
+    semanticSimilarity:
+      Number(
+        averageSimilarity.toFixed(4)
+      ),
+
+    topicCoverage:
+      Math.round(
+        topicCoverage * 100
+      ),
+
+    referenceChunks:
+      chunks.length,
+
+    unsupportedContent,
+
+    confidence,
+
+    hallucinationRisk,
+
+    status,
+
+    hallucinationStatus,
+
+    references,
+
+  };
+
+}

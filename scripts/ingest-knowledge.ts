@@ -1,4 +1,5 @@
 import path from "path";
+import fs from "fs";
 import ollama from "ollama";
 
 import { PDFLoader } from "../lib/knowledge/loaders/pdfLoader";
@@ -9,9 +10,16 @@ const EMBEDDING_MODEL = "nomic-embed-text";
 const CHUNK_SIZE = 4000;
 const CHUNK_OVERLAP = 400;
 
-/**
- * Split large PDF text into embedding-safe chunks.
- */
+function getArg(name: string): string | undefined {
+    const index = process.argv.indexOf(name);
+
+    if (index === -1) {
+        return undefined;
+    }
+
+    return process.argv[index + 1];
+}
+
 function splitText(text: string): string[] {
     const chunks: string[] = [];
 
@@ -20,7 +28,6 @@ function splitText(text: string): string[] {
     while (start < text.length) {
         let end = Math.min(start + CHUNK_SIZE, text.length);
 
-        // Prefer breaking at a paragraph/newline.
         if (end < text.length) {
             const newline = text.lastIndexOf("\n", end);
 
@@ -39,185 +46,467 @@ function splitText(text: string): string[] {
             break;
         }
 
-        start = Math.max(end - CHUNK_OVERLAP, start + 1);
+        start = Math.max(
+            end - CHUNK_OVERLAP,
+            start + 1
+        );
     }
 
     return chunks;
 }
 
-/**
- * Generate a 768-dimensional embedding using Ollama.
- */
-async function generateEmbedding(text: string): Promise<number[]> {
-    const response = await ollama.embeddings({
-        model: EMBEDDING_MODEL,
-        prompt: text,
-    });
+async function generateEmbedding(
+    text: string
+): Promise<number[]> {
+
+    const response =
+        await ollama.embeddings({
+            model: EMBEDDING_MODEL,
+            prompt: text,
+        });
 
     return response.embedding;
 }
 
-async function main() {
-    console.log("🚀 SRIMATHY Knowledge Ingestion\n");
+function getPdfFiles(inputPath: string): string[] {
 
-    // --------------------------------------------------
-    // 1. Locate PDF
-    // --------------------------------------------------
+    const absolutePath =
+        path.resolve(
+            process.cwd(),
+            inputPath
+        );
 
-    const pdfPath = path.join(
-        process.cwd(),
-        "knowledge",
-        "books",
-        "eeev101.pdf"
-    );
-
-    console.log(`📄 Loading: ${pdfPath}`);
-
-    // --------------------------------------------------
-    // 2. Load PDF
-    // --------------------------------------------------
-
-    const loader = new PDFLoader();
-
-    const documents = await loader.load(pdfPath);
-
-    console.log(`✅ Documents loaded: ${documents.length}`);
-
-    if (documents.length === 0) {
-        console.log("⚠️ No documents found.");
-        return;
+    if (!fs.existsSync(absolutePath)) {
+        throw new Error(
+            `Path not found: ${absolutePath}`
+        );
     }
 
-    // --------------------------------------------------
-    // 3. Connect to ChromaDB
-    // --------------------------------------------------
+    const stat =
+        fs.statSync(absolutePath);
 
-    console.log("\n🔌 Connecting to ChromaDB...");
+    // Single PDF
+    if (stat.isFile()) {
 
-    const collection = await getKnowledgeCollection();
-
-    console.log(`✅ Collection: ${collection.name}`);
-
-    // --------------------------------------------------
-    // 4. Process documents
-    // --------------------------------------------------
-
-    let totalChunks = 0;
-
-    for (const document of documents) {
-        console.log(`\n📚 Processing: ${document.title}`);
-
-        const text = document.content.trim();
-
-        if (!text) {
-            console.log("⚠️ Empty document — skipping.");
-            continue;
+        if (
+            path.extname(absolutePath)
+                .toLowerCase() !== ".pdf"
+        ) {
+            throw new Error(
+                `File is not a PDF: ${absolutePath}`
+            );
         }
 
-        console.log(`📏 Document characters: ${text.length}`);
+        return [absolutePath];
+    }
 
-        // --------------------------------------------------
-        // 5. Split document
-        // --------------------------------------------------
+    // Directory
+    if (stat.isDirectory()) {
 
-        const chunks = splitText(text);
+        return fs
+            .readdirSync(absolutePath)
+            .filter(
+                file =>
+                    file
+                        .toLowerCase()
+                        .endsWith(".pdf")
+            )
+            .sort()
+            .map(
+                file =>
+                    path.join(
+                        absolutePath,
+                        file
+                    )
+            );
+    }
 
-        console.log(`✂️ Created ${chunks.length} chunks`);
+    return [];
+}
 
-        // --------------------------------------------------
-        // 6. Generate embeddings + store
-        // --------------------------------------------------
+async function main() {
 
-        for (let i = 0; i < chunks.length; i++) {
-            const chunk = chunks[i];
+    console.log(
+        "🚀 SRIMATHY NCERT KNOWLEDGE INGESTION\n"
+    );
 
-            console.log(
-                `\n[${i + 1}/${chunks.length}] 🧠 Generating embedding...`
+    const fileArg =
+        getArg("--file");
+
+    const dirArg =
+        getArg("--dir");
+
+    const grade =
+        getArg("--grade");
+
+    const subject =
+        getArg("--subject");
+
+    const book =
+        getArg("--book");
+
+    if (
+        (!fileArg && !dirArg) ||
+        !grade ||
+        !subject ||
+        !book
+    ) {
+
+        console.error(`
+Usage:
+
+Single PDF:
+npm run knowledge:ingest -- \\
+  --file <pdf> \\
+  --grade <grade> \\
+  --subject <subject> \\
+  --book <book>
+
+Directory:
+npm run knowledge:ingest -- \\
+  --dir <directory> \\
+  --grade <grade> \\
+  --subject <subject> \\
+  --book <book>
+`);
+
+        process.exit(1);
+    }
+
+    if (fileArg && dirArg) {
+
+        console.error(
+            "❌ Use either --file OR --dir, not both."
+        );
+
+        process.exit(1);
+    }
+
+    const inputPath =
+        fileArg || dirArg!;
+
+    const pdfFiles =
+        getPdfFiles(inputPath);
+
+    if (pdfFiles.length === 0) {
+
+        console.error(
+            `❌ No PDF files found in: ${inputPath}`
+        );
+
+        process.exit(1);
+    }
+
+    console.log(
+        `📚 Book       : ${book}`
+    );
+
+    console.log(
+        `🎓 Grade      : ${grade}`
+    );
+
+    console.log(
+        `📐 Subject    : ${subject}`
+    );
+
+    console.log(
+        `📄 PDF files  : ${pdfFiles.length}`
+    );
+
+    console.log(
+        `🧠 Embeddings : ${EMBEDDING_MODEL}`
+    );
+
+    console.log("");
+
+    // --------------------------------------------------
+    // Chroma
+    // --------------------------------------------------
+
+    console.log(
+        "🔌 Connecting to ChromaDB..."
+    );
+
+    const collection =
+        await getKnowledgeCollection();
+
+    console.log(
+        `✅ Collection: ${collection.name}`
+    );
+
+    let totalDocuments = 0;
+    let totalChunks = 0;
+
+    // --------------------------------------------------
+    // Process every PDF
+    // --------------------------------------------------
+
+    for (
+        let fileIndex = 0;
+        fileIndex < pdfFiles.length;
+        fileIndex++
+    ) {
+
+        const pdfPath =
+            pdfFiles[fileIndex];
+
+        const fileName =
+            path.basename(pdfPath);
+
+        console.log("\n======================================");
+
+        console.log(
+            `📖 PDF ${fileIndex + 1}/${pdfFiles.length}: ${fileName}`
+        );
+
+        console.log(
+            "======================================"
+        );
+
+        const loader =
+            new PDFLoader();
+
+        const documents =
+            await loader.load(
+                pdfPath
             );
 
-            console.log(`   Characters: ${chunk.length}`);
+        console.log(
+            `✅ Documents loaded: ${documents.length}`
+        );
 
-            try {
-                const embedding = await generateEmbedding(chunk);
+        for (
+            const document
+            of documents
+        ) {
+
+            const text =
+                document.content.trim();
+
+            if (!text) {
 
                 console.log(
-                    `   ✅ Embedding generated: ${embedding.length} dimensions`
+                    "⚠️ Empty document — skipping."
                 );
 
-                // Unique ID for each chunk.
-                const id = `${document.id}-chunk-${i}`;
+                continue;
+            }
 
-                // --------------------------------------------------
-                // Metadata
-                // --------------------------------------------------
+            console.log(
+                `📏 Characters: ${text.length}`
+            );
 
-                const fileName = path.basename(document.source);
+            const chunks =
+                splitText(text);
 
-                const pageCount =
-                    typeof document.metadata?.pageCount === "number"
-                        ? document.metadata.pageCount
-                        : 0;
+            console.log(
+                `✂️ Chunks: ${chunks.length}`
+            );
+
+            totalDocuments += 1;
+
+            // Chapter number from filenames such as:
+            // eemm101.pdf → 1
+            // eemm115.pdf → 15
+            const chapterMatch =
+                fileName.match(
+                    /[a-z]+1(\d{2})\.pdf$/i
+                );
+
+            const chapter =
+                chapterMatch
+                    ? Number(
+                        chapterMatch[1]
+                    )
+                    : undefined;
+
+            for (
+                let i = 0;
+                i < chunks.length;
+                i++
+            ) {
+
+                const chunk =
+                    chunks[i];
+
+                console.log(
+                    `[${i + 1}/${chunks.length}] 🧠 Embedding ${chunk.length} chars...`
+                );
+
+                const embedding =
+                    await generateEmbedding(
+                        chunk
+                    );
+
+                const safeBook =
+                    book
+                        .toLowerCase()
+                        .replace(
+                            /[^a-z0-9]+/g,
+                            "-"
+                        )
+                        .replace(
+                            /^-|-$/g,
+                            ""
+                        );
+
+                const id =
+                    [
+                        "ncert",
+                        grade,
+                        subject.toLowerCase(),
+                        safeBook,
+                        fileName
+                            .replace(
+                                ".pdf",
+                                ""
+                            ),
+                        "chunk",
+                        i
+                    ].join("-");
+
+                const metadata: Record<
+                    string,
+                    string | number
+                > = {
+
+                    source:
+                        pdfPath,
+
+                    fileName,
+
+                    loader:
+                        "pdf",
+
+                    grade,
+
+                    subject,
+
+                    book,
+
+                    board:
+                        "NCERT",
+
+                    sourceType:
+                        "official-ncert",
+
+                    pageCount:
+                        typeof document.metadata
+                            ?.pageCount ===
+                        "number"
+                            ? document.metadata
+                                .pageCount
+                            : 0,
+
+                    chunkNumber:
+                        i,
+
+                    ingestedAt:
+                        new Date()
+                            .toISOString(),
+                };
+
+                if (
+                    chapter !== undefined
+                ) {
+
+                    metadata.chapter =
+                        chapter;
+                }
 
                 await collection.upsert({
+
                     ids: [id],
 
-                    documents: [chunk],
+                    documents: [
+                        chunk
+                    ],
 
-                    embeddings: [embedding],
+                    embeddings: [
+                        embedding
+                    ],
 
                     metadatas: [
-                        {
-                            source: document.source,
-                            fileName,
-                            loader: "pdf",
-                            pageCount,
-                            chunkNumber: i,
-                        },
+                        metadata
                     ],
                 });
 
                 totalChunks++;
 
-                console.log(`   💾 Stored: ${id}`);
-            } catch (error) {
-                console.error(
-                    `   ❌ Failed to process chunk ${i}:`
+                console.log(
+                    `   💾 Stored: ${id}`
                 );
-
-                console.error(error);
-
-                throw error;
             }
         }
     }
 
-    // --------------------------------------------------
-    // 7. Verify ChromaDB
-    // --------------------------------------------------
+    const count =
+        await collection.count();
 
-    const count = await collection.count();
+    console.log("\n======================================");
+    console.log(
+        "🎉 NCERT INGESTION COMPLETE"
+    );
+    console.log("======================================");
 
-    // --------------------------------------------------
-    // 8. Final report
-    // --------------------------------------------------
+    console.log(
+        `Grade               : ${grade}`
+    );
 
-    console.log("\n================================");
-    console.log("🎉 INGESTION COMPLETE");
-    console.log("================================");
+    console.log(
+        `Subject             : ${subject}`
+    );
 
-    console.log(`Documents processed : ${documents.length}`);
-    console.log(`Vectors inserted    : ${totalChunks}`);
-    console.log(`Chroma total        : ${count}`);
-    console.log(`Embedding model     : ${EMBEDDING_MODEL}`);
-    console.log(`Embedding dimension : 768`);
-    console.log(`Chunk size          : ${CHUNK_SIZE}`);
-    console.log(`Chunk overlap       : ${CHUNK_OVERLAP}`);
+    console.log(
+        `Book                : ${book}`
+    );
 
-    console.log("\n✅ SRIMATHY knowledge is now in ChromaDB.");
+    console.log(
+        `PDF files processed : ${pdfFiles.length}`
+    );
+
+    console.log(
+        `Documents processed : ${totalDocuments}`
+    );
+
+    console.log(
+        `Vectors added       : ${totalChunks}`
+    );
+
+    console.log(
+        `Chroma total        : ${count}`
+    );
+
+    console.log(
+        `Embedding model     : ${EMBEDDING_MODEL}`
+    );
+
+    console.log(
+        "Embedding dimension : 768"
+    );
+
+    console.log(
+        `Chunk size          : ${CHUNK_SIZE}`
+    );
+
+    console.log(
+        `Chunk overlap       : ${CHUNK_OVERLAP}`
+    );
+
+    console.log(
+        "\n✅ SRIMATHY NCERT knowledge ingestion successful."
+    );
 }
 
-main().catch((error) => {
-    console.error("\n❌ Ingestion failed:");
-    console.error(error);
-    process.exit(1);
-});
+main().catch(
+    error => {
+
+        console.error(
+            "\n❌ Ingestion failed:"
+        );
+
+        console.error(error);
+
+        process.exit(1);
+    }
+);

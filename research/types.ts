@@ -1,37 +1,40 @@
-export type HallucinationRisk = "LOW" | "MEDIUM" | "HIGH";
+export type HallucinationRisk =
+  | "LOW"
+  | "MEDIUM"
+  | "HIGH"
+  | "UNKNOWN";
 
 export interface RuntimeMetrics {
+  model: string;
+  embeddingModel: string;
+  inference: string;
 
-    model: string;
+  prefillMs: number;
+  generationMs: number;
+  totalMs: number;
 
-    embeddingModel: string;
+  tokensPerSecond: number;
 
-    inference: string;
+  promptTokens: number;
+  completionTokens: number;
 
-    ttft: number;
+  retrievedChunks: number;
+  retrievalLatency: number;
 
-    tokensPerSecond: number;
+  peakRamMb: number;
+  cpuUsage: number;
 
-    promptTokens: number;
+  confidence: number;
+  similarity: number;
 
-    completionTokens: number;
+  curriculumAlignment: number;
 
-    retrievedChunks: number;
+  hallucinationRisk: HallucinationRisk;
 
-    retrievalLatency: number;
+  privacy: string;
 
-    peakRamMb: number;
+  lastPrompt: string;
+  lastUpdated: string;
 
-    cpuUsage: number;
-
-    confidence: number;
-
-    similarity: number;
-
-    curriculumAlignment: number;
-
-    hallucinationRisk: HallucinationRisk;
-
-    privacy: string;
-
+  experimentCount: number;
 }

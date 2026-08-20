@@ -1,60 +1,31 @@
 import { ChromaClient, Collection } from "chromadb";
 
-export class ChromaVectorStore {
-    private client: ChromaClient;
-    private collection?: Collection;
+const CHROMA_URL = "http://localhost:8000";
 
-    constructor(
-        private collectionName = "srimathy_knowledge"
-    ) {
-        this.client = new ChromaClient({
-            path: "http://localhost:8000"
+const COLLECTION_NAME = "srimathy_knowledge";
+
+let client: ChromaClient | null = null;
+
+export function getChromaClient(): ChromaClient {
+    if (!client) {
+        client = new ChromaClient({
+            path: CHROMA_URL,
         });
     }
 
-    async initialize() {
-        this.collection = await this.client.getOrCreateCollection({
-            name: this.collectionName
-        });
+    return client;
+}
 
-        console.log(
-            `✅ ChromaDB collection ready: ${this.collectionName}`
-        );
+export async function getKnowledgeCollection(): Promise<Collection> {
+    const chroma = getChromaClient();
 
-        return this.collection;
-    }
+    const collection = await chroma.getOrCreateCollection({
+        name: COLLECTION_NAME,
+        metadata: {
+            description: "SRIMATHY local knowledge base",
+            embedding_dimension: 768,
+        },
+    });
 
-    async addDocument(
-        id: string,
-        content: string,
-        embedding: number[],
-        metadata: Record<string, string | number | boolean>
-    ) {
-        if (!this.collection) {
-            await this.initialize();
-        }
-
-        await this.collection!.add({
-            ids: [id],
-            documents: [content],
-            embeddings: [embedding],
-            metadatas: [metadata]
-        });
-
-        console.log(`✅ Stored vector: ${id}`);
-    }
-
-    async search(
-        embedding: number[],
-        topK = 5
-    ) {
-        if (!this.collection) {
-            await this.initialize();
-        }
-
-        return this.collection!.query({
-            queryEmbeddings: [embedding],
-            nResults: topK
-        });
-    }
+    return collection;
 }

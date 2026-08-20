@@ -1,0 +1,188 @@
+[
+  {
+    "id": "req-1786688881656-y9x3x4",
+    "timestamp": "2026-08-14T06:28:58.460Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 56803,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 9464,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 10508,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 10293,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 26538,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688847579-egdfuk",
+    "timestamp": "2026-08-14T06:28:01.654Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 34074,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 7836,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8332,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 8243,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 9662,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688803938-e7vwyt",
+    "timestamp": "2026-08-14T06:27:13.178Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 29239,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 6495,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8418,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 6632,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7695,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688771459-67ia96",
+    "timestamp": "2026-08-14T06:26:43.937Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 32477,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8614,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8056,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 7832,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7975,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688621168-w0y6tw",
+    "timestamp": "2026-08-14T06:24:28.001Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 46832,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 11971,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 11138,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 12085,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 11637,
+        "status": "success"
+      }
+    ],
+    "success": true
+  },
+  {
+    "id": "req-1786688387578-2mvz72",
+    "timestamp": "2026-08-14T06:20:20.025Z",
+    "model": "gemma3:4b",
+    "provider": "Ollama Local",
+    "runtime": "offline",
+    "totalLatency": 32446,
+    "agents": [
+      {
+        "name": "Curriculum Agent",
+        "latency": 8190,
+        "status": "success"
+      },
+      {
+        "name": "Worksheet Agent",
+        "latency": 8617,
+        "status": "success"
+      },
+      {
+        "name": "Quiz Agent",
+        "latency": 7679,
+        "status": "success"
+      },
+      {
+        "name": "Teacher Agent",
+        "latency": 7959,
+        "status": "success"
+      }
+    ],
+    "success": true
+  }
+]

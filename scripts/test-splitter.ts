@@ -1,36 +1,75 @@
-import { PDFLoader } from "../knowledge/loaders/pdfLoader";
-import { RecursiveSplitter } from "../knowledge/splitters/recursiveSplitter";
+import { PDFLoader } from "../lib/knowledge/loaders/docxLoader";
+
+import {
+  RecursiveSplitter,
+} from "../knowledge/recursiveSplitter";
 
 async function main() {
 
-    const loader = new PDFLoader();
+  const loader =
+    new PDFLoader();
 
-    const docs = await loader.load(
-
-        "./knowledge/books/eeev101.pdf"
-
+  const docs =
+    await loader.load(
+      "./knowledge/books/eeev101.pdf"
     );
 
-    const splitter = new RecursiveSplitter();
+  if (!docs.length) {
 
-    const chunks = splitter.split(docs[0]);
+    throw new Error(
+      "No documents were loaded."
+    );
+  }
 
-    console.log("Document");
+  const splitter =
+    new RecursiveSplitter();
 
-    console.log(docs[0].title);
+  const chunks =
+    splitter.split(
+      docs[0]
+    );
 
-    console.log("");
+  console.log(
+    "Document"
+  );
 
-    console.log("Chunks Created");
+  console.log(
+    docs[0].title
+  );
 
-    console.log(chunks.length);
+  console.log("");
 
-    console.log("");
+  console.log(
+    "Chunks Created"
+  );
 
-    console.log("First Chunk");
+  console.log(
+    chunks.length
+  );
 
-    console.log(chunks[0].content.substring(0,300));
+  console.log("");
 
+  console.log(
+    "First Chunk"
+  );
+
+  console.log(
+    chunks[0]?.content
+      .substring(0, 300)
+  );
 }
 
-main();
+main().catch(
+  (
+    error
+  ) => {
+
+    console.error(
+      "Splitter test failed:"
+    );
+
+    console.error(error);
+
+    process.exit(1);
+  }
+);
