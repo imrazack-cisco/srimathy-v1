@@ -1,22 +1,45 @@
 import { AI } from "@/ai";
-import { worksheetPrompt } from "@/lib/prompts";
 
-import { WorksheetSchema } from "@/lib/validation/agentSchemas";
-import { extractJson } from "@/lib/validation/extractJson";
-import { validateAgentOutput } from "@/lib/validation/validateAgentOutput";
+import {
+  worksheetPrompt,
+} from "@/lib/prompts";
+
+import {
+  WorksheetSchema,
+  WorksheetOutput,
+  WorksheetJSONSchema,
+} from "@/lib/validation/agentSchemas";
+
+import {
+  extractJson,
+} from "@/lib/validation/extractJson";
+
+import {
+  validateAgentOutput,
+} from "@/lib/validation/validateAgentOutput";
+
 
 export interface WorksheetRequest {
   topic: string;
 }
 
+
 export interface WorksheetResponse {
-  content: string;
-  structured: boolean;
-  validationAttempts: number;
+
+  content:
+    string;
+
+  structured:
+    boolean;
+
+  validationAttempts:
+    number;
+
 }
 
+
 function worksheetToMarkdown(
-  worksheet: any
+  worksheet: WorksheetOutput
 ): string {
 
   return `
@@ -25,14 +48,16 @@ function worksheetToMarkdown(
 ## Instructions
 
 ${worksheet.instructions
-  .map((item: string) => `- ${item}`)
+  .map(
+    item => `- ${item}`
+  )
   .join("\n")}
 
 ## Part A — Warm Up
 
 ${worksheet.warmUp
   .map(
-    (item: string, index: number) =>
+    (item, index) =>
       `${index + 1}. ${item}`
   )
   .join("\n\n")}
@@ -41,7 +66,7 @@ ${worksheet.warmUp
 
 ${worksheet.practice
   .map(
-    (item: string, index: number) =>
+    (item, index) =>
       `${index + 1}. ${item}`
   )
   .join("\n\n")}
@@ -50,7 +75,7 @@ ${worksheet.practice
 
 ${worksheet.challenge
   .map(
-    (item: string, index: number) =>
+    (item, index) =>
       `${index + 1}. ${item}`
   )
   .join("\n\n")}
@@ -59,7 +84,7 @@ ${worksheet.challenge
 
 ${worksheet.realWorld
   .map(
-    (item: string, index: number) =>
+    (item, index) =>
       `${index + 1}. ${item}`
   )
   .join("\n\n")}
@@ -68,7 +93,7 @@ ${worksheet.realWorld
 
 ${worksheet.reflection
   .map(
-    (item: string, index: number) =>
+    (item, index) =>
       `${index + 1}. ${item}`
   )
   .join("\n\n")}
@@ -77,24 +102,39 @@ ${worksheet.reflection
 
 ${worksheet.answerKey
   .map(
-    (item: string, index: number) =>
+    (item, index) =>
       `${index + 1}. ${item}`
   )
   .join("\n\n")}
 `.trim();
+
 }
+
 
 export async function worksheetAgent(
   request: WorksheetRequest
 ): Promise<WorksheetResponse> {
 
-  console.log("📝 Worksheet Agent");
+  console.log(
+    "\n======================================"
+  );
 
-  let lastError = "";
+  console.log(
+    "📝 SRIMATHY WORKSHEET AGENT"
+  );
 
-  /*
-   * Attempt 1 + one deterministic repair attempt.
-   */
+  console.log(
+    "======================================"
+  );
+
+  console.log(
+    "🔒 Native Ollama structured decoding: ON"
+  );
+
+
+  let lastError =
+    "";
+
 
   for (
     let attempt = 1;
@@ -102,11 +142,26 @@ export async function worksheetAgent(
     attempt++
   ) {
 
+    console.log(
+      `🧪 Worksheet generation attempt ${attempt}`
+    );
+
+
     const prompt =
+
       attempt === 1
-        ? request.topic
+
+        ? `
+Generate the worksheet for:
+
+${request.topic}
+
+The response is constrained by a JSON Schema.
+Return the requested worksheet content.
+`
+
         : `
-The previous response failed schema validation.
+The previous worksheet generation failed validation.
 
 Validation error:
 
@@ -114,22 +169,34 @@ ${lastError}
 
 Generate the worksheet again.
 
-Return ONLY valid JSON matching the required schema.
-Do not add Markdown or explanatory text.
+The response is constrained by a JSON Schema.
+Return only content that conforms to that schema.
 
 Topic:
+
 ${request.topic}
 `;
 
-    const result = await AI.generate(
-      worksheetPrompt,
-      prompt
-    );
+
+    const result =
+      await AI.generate(
+
+        worksheetPrompt,
+
+        prompt,
+
+        WorksheetJSONSchema
+
+      );
+
 
     try {
 
       const rawJson =
-        extractJson(result.response);
+        extractJson(
+          result.response
+        );
+
 
       const validation =
         validateAgentOutput(
@@ -137,72 +204,82 @@ ${request.topic}
           rawJson
         );
 
+
       if (
         validation.success &&
         validation.data
       ) {
 
         console.log(
-          `✅ Worksheet schema validation passed on attempt ${attempt}`
+          `✅ Worksheet schema validation PASSED on attempt ${attempt}`
         );
 
+        console.log(
+          "🔒 Classroom output contract: VALID"
+        );
+
+
         return {
+
           content:
             worksheetToMarkdown(
               validation.data
             ),
 
-          structured: true,
+          structured:
+            true,
 
           validationAttempts:
             attempt,
+
         };
+
       }
+
 
       lastError =
         validation.error ??
         "Unknown schema validation error.";
 
-    } catch (error) {
+
+      console.warn(
+        `⚠️ Worksheet schema validation FAILED on attempt ${attempt}`
+      );
+
+      console.warn(
+        lastError
+      );
+
+    } catch (
+      error
+    ) {
 
       lastError =
         error instanceof Error
           ? error.message
           : "Invalid JSON returned by model.";
 
+
       console.warn(
-        `⚠️ Worksheet validation attempt ${attempt} failed:`,
+        `⚠️ Worksheet JSON parsing FAILED on attempt ${attempt}`
+      );
+
+      console.warn(
         lastError
       );
+
     }
+
   }
 
-  /*
-   * Safety fallback.
-   *
-   * If both structured attempts fail, we still return the
-   * model's final response rather than breaking the classroom UI.
-   */
 
-  console.warn(
-    "⚠️ Worksheet structured validation failed after retry."
+  console.error(
+    "❌ Worksheet structured output failed."
   );
 
-  const fallback =
-    await AI.generate(
-      worksheetPrompt,
-      `
-Create the worksheet for:
 
-${request.topic}
+  throw new Error(
+    `Worksheet structured output validation failed after 2 attempts. ${lastError}`
+  );
 
-Return the best possible response.
-`
-    );
-
-  return {
-    content: fallback.response,
-    structured: false,
-    validationAttempts: 2,
-  };
 }

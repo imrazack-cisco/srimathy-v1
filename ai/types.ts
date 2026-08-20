@@ -1,26 +1,39 @@
-// ai/types.ts
-
 /**
- * Common interface that every AI provider must implement.
- * This allows us to plug in different providers later
- * (Ollama, LM Studio, vLLM, etc.) without changing the agents.
+ * ai/types.ts
+ *
+ * Common AI provider interface.
+ *
+ * Providers may optionally receive a JSON Schema.
+ * Ollama uses this natively for deterministic structured
+ * generation. Providers that do not support structured
+ * decoding may safely ignore it.
  */
+
+export type StructuredOutputFormat =
+  | "json"
+  | Record<string, unknown>;
+
+
 export interface AIProvider {
+
   /** Provider name */
   name: string;
 
-  /** Check whether the provider is available */
+
+  /** Check whether provider is available */
   health(): Promise<boolean>;
 
+
   /**
-   * Generate a response from the model.
+   * Generate a response.
    *
-   * @param system System prompt
-   * @param prompt User prompt
-   * @returns Generated text
+   * structuredFormat:
+   * Optional JSON / JSON-Schema constraint.
    */
   generate(
     system: string,
-    prompt: string
-  ): Promise<string>;
+    prompt: string,
+    structuredFormat?: StructuredOutputFormat
+  ): Promise<any>;
+
 }

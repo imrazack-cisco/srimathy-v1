@@ -483,7 +483,7 @@ export default function WorkspacePage() {
             {/* VOICE LAB                                        */}
             {/* ================================================= */}
 
-            {(activeContentTab === "Voice" || activeContentTab === "🎙 Voice") && (
+            {activeContentTab === "Voice" && (
 
               <div className="mt-8">
 

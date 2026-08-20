@@ -1,0 +1,773 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import {
+  CircuitProvider,
+} from "@/ai/providers/circuit";
+
+
+/* ============================================================
+   SRIMATHY VOICE AI ROUTE
+
+   Flow:
+
+   Mac Microphone
+        ↓
+   Browser Speech Recognition
+        ↓
+   /api/voice
+        ↓
+   Ollama Local
+        ↓
+   if Ollama fails
+        ↓
+   Cisco CIRCUIT
+        ↓
+   Answer
+        ↓
+   TTS
+   ============================================================ */
+
+
+/* ============================================================
+   CONFIGURATION
+   ============================================================ */
+
+const OLLAMA_MODEL =
+  process.env.OLLAMA_MODEL ||
+  "gemma3:4b";
+
+
+/*
+ * Some environments define:
+ *
+ * OLLAMA_URL=http://localhost:11434
+ *
+ * while others define:
+ *
+ * OLLAMA_URL=http://localhost:11434/api/generate
+ *
+ * Normalize both forms.
+ */
+
+function getOllamaGenerateUrl(): string {
+
+  const configured =
+    (
+      process.env.OLLAMA_URL ||
+      "http://localhost:11434/api/generate"
+    ).replace(
+      /\/+$/,
+      ""
+    );
+
+
+  if (
+    configured.endsWith("/api/generate")
+  ) {
+
+    return configured;
+
+  }
+
+
+  if (
+    configured.endsWith("/api")
+  ) {
+
+    return `${configured}/generate`;
+
+  }
+
+
+  return `${configured}/api/generate`;
+
+}
+
+
+/* ============================================================
+   OLLAMA
+   ============================================================ */
+
+async function askOllama(
+  question: string,
+  context: {
+    grade: string;
+    subject: string;
+    board: string;
+    book: string;
+  }
+): Promise<{
+  answer: string;
+  provider: string;
+  model: string;
+  latencyMs: number;
+}> {
+
+  const ollamaUrl =
+    getOllamaGenerateUrl();
+
+
+  const system = `
+You are SRIMATHY, a friendly AI teacher for school students.
+
+Curriculum:
+Grade: ${context.grade}
+Subject: ${context.subject}
+Board: ${context.board}
+Book: ${context.book}
+
+Answer the student's question clearly and conversationally.
+
+Rules:
+- Keep the answer appropriate for a Grade ${context.grade} student.
+- Explain step by step when mathematics is involved.
+- Do not invent textbook facts.
+- Prefer concise spoken explanations.
+- Do not use markdown tables.
+- Avoid long answers because the answer will be spoken aloud.
+- Answer naturally as if speaking directly to the student.
+`;
+
+
+  console.log("");
+  console.log("======================================");
+  console.log("🎙 SRIMATHY VOICE — OLLAMA");
+  console.log("======================================");
+  console.log("URL   :", ollamaUrl);
+  console.log("Model :", OLLAMA_MODEL);
+
+
+  const start =
+    performance.now();
+
+
+  const response =
+    await fetch(
+      ollamaUrl,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          "Accept":
+            "application/json",
+        },
+
+        body:
+          JSON.stringify({
+
+            model:
+              OLLAMA_MODEL,
+
+            prompt:
+              system +
+              "\n\nStudent question:\n" +
+              question,
+
+            stream:
+              false,
+
+            options: {
+
+              temperature:
+                0.4,
+
+              num_predict:
+                300,
+
+            },
+
+          }),
+
+      }
+    );
+
+
+  const latencyMs =
+    Math.round(
+      performance.now() -
+      start
+    );
+
+
+  const raw =
+    await response.text();
+
+
+  if (
+    !response.ok
+  ) {
+
+    throw new Error(
+      `Ollama failed: HTTP ${response.status} ${raw.slice(0, 200)}`
+    );
+
+  }
+
+
+  let data: any;
+
+
+  try {
+
+    data =
+      JSON.parse(raw);
+
+  } catch {
+
+    throw new Error(
+      "Ollama returned invalid JSON."
+    );
+
+  }
+
+
+  const answer =
+    data?.response ||
+    "";
+
+
+  if (
+    !answer.trim()
+  ) {
+
+    throw new Error(
+      "Ollama returned an empty response."
+    );
+
+  }
+
+
+  console.log(
+    `✅ Ollama voice generation successful: ${latencyMs} ms`
+  );
+
+
+  return {
+
+    answer:
+      answer.trim(),
+
+    provider:
+      "Ollama Local",
+
+    model:
+      OLLAMA_MODEL,
+
+    latencyMs,
+
+  };
+
+}
+
+
+/* ============================================================
+   CIRCUIT FALLBACK
+   ============================================================ */
+
+async function askCircuit(
+  question: string,
+  context: {
+    grade: string;
+    subject: string;
+    board: string;
+    book: string;
+  }
+): Promise<{
+  answer: string;
+  provider: string;
+  model: string;
+  latencyMs: number;
+}> {
+
+  const system = `
+You are SRIMATHY, a friendly AI teacher for school students.
+
+Curriculum:
+Grade: ${context.grade}
+Subject: ${context.subject}
+Board: ${context.board}
+Book: ${context.book}
+
+Answer the student's question clearly and conversationally.
+
+Rules:
+- Keep the answer appropriate for Grade ${context.grade}.
+- Explain mathematics step by step.
+- Do not invent curriculum-specific facts.
+- Keep the response concise because it will be spoken aloud.
+- Do not use markdown tables.
+`;
+
+
+  console.log("");
+  console.log("======================================");
+  console.log("☁️ SRIMATHY VOICE — CIRCUIT FALLBACK");
+  console.log("======================================");
+
+
+  const start =
+    performance.now();
+
+
+  /*
+   * CircuitProvider now conforms to:
+   *
+   * generate(system, prompt): Promise<string>
+   */
+
+  const answer =
+    await CircuitProvider.generate(
+      system,
+      question
+    );
+
+
+  const measuredLatency =
+    Math.round(
+      performance.now() -
+      start
+    );
+
+
+  const metrics =
+    CircuitProvider.lastMetrics;
+
+
+  console.log(
+    `✅ CIRCUIT voice generation successful: ${measuredLatency} ms`
+  );
+
+
+  return {
+
+    answer:
+      answer.trim(),
+
+    provider:
+      "Cisco CIRCUIT",
+
+    model:
+      metrics?.model ||
+      process.env.CIRCUIT_MODEL ||
+      "gemini-3.1-flash-lite",
+
+    latencyMs:
+      metrics?.latencyMs ??
+      measuredLatency,
+
+  };
+
+}
+
+
+/* ============================================================
+   POST /api/voice
+   ============================================================ */
+
+export async function POST(
+  request: NextRequest
+) {
+
+  const requestStart =
+    performance.now();
+
+
+  try {
+
+    const body =
+      await request.json();
+
+
+    const question =
+      String(
+        body.question ||
+        ""
+      ).trim();
+
+
+    if (
+      !question
+    ) {
+
+      return NextResponse.json(
+        {
+          success:
+            false,
+
+          error:
+            "No voice question received.",
+        },
+
+        {
+          status:
+            400,
+        }
+      );
+
+    }
+
+
+    const context = {
+
+      grade:
+        String(
+          body.grade ||
+          "5"
+        ),
+
+      subject:
+        String(
+          body.subject ||
+          "Mathematics"
+        ),
+
+      board:
+        String(
+          body.board ||
+          "NCERT"
+        ),
+
+      book:
+        String(
+          body.book ||
+          "Math Mela"
+        ),
+
+    };
+
+
+    console.log("");
+    console.log("======================================");
+    console.log("🎙 SRIMATHY VOICE REQUEST");
+    console.log("======================================");
+    console.log("Question :", question);
+    console.log("Grade    :", context.grade);
+    console.log("Subject  :", context.subject);
+
+
+    /* ========================================================
+       1. TRY OLLAMA
+       ======================================================== */
+
+    try {
+
+      const result =
+        await askOllama(
+          question,
+          context
+        );
+
+
+      const totalLatencyMs =
+        Math.round(
+          performance.now() -
+          requestStart
+        );
+
+
+      console.log(
+        "======================================"
+      );
+
+      console.log(
+        "🎙 VOICE RESULT"
+      );
+
+      console.log(
+        "Provider:",
+        result.provider
+      );
+
+      console.log(
+        "Model:",
+        result.model
+      );
+
+      console.log(
+        "AI latency:",
+        result.latencyMs,
+        "ms"
+      );
+
+      console.log(
+        "Total latency:",
+        totalLatencyMs,
+        "ms"
+      );
+
+      console.log(
+        "Fallback:",
+        false
+      );
+
+      console.log(
+        "======================================"
+      );
+
+
+      return NextResponse.json({
+
+        success:
+          true,
+
+        answer:
+          result.answer,
+
+        provider:
+          result.provider,
+
+        model:
+          result.model,
+
+        aiLatencyMs:
+          result.latencyMs,
+
+        totalLatencyMs,
+
+        fallback:
+          false,
+
+        fallbackReason:
+          null,
+
+        targetMs:
+          2500,
+
+        targetStatus:
+          totalLatencyMs <= 2500
+            ? "PASS"
+            : "ABOVE_TARGET",
+
+      });
+
+    } catch (
+      ollamaError: any
+    ) {
+
+      const reason =
+        ollamaError?.message ||
+        "Ollama unavailable.";
+
+
+      console.warn("");
+      console.warn(
+        "======================================"
+      );
+
+      console.warn(
+        "🔄 SRIMATHY VOICE FAILOVER"
+      );
+
+      console.warn(
+        "======================================"
+      );
+
+      console.warn(
+        "Primary Provider : Ollama"
+      );
+
+      console.warn(
+        "Primary Status   : ❌ Failed"
+      );
+
+      console.warn(
+        "Reason           :",
+        reason
+      );
+
+      console.warn(
+        "Fallback Provider: Cisco CIRCUIT"
+      );
+
+      console.warn(
+        "======================================"
+      );
+
+
+      /* ======================================================
+         2. FALL BACK TO CIRCUIT
+         ====================================================== */
+
+      try {
+
+        const result =
+          await askCircuit(
+            question,
+            context
+          );
+
+
+        const totalLatencyMs =
+          Math.round(
+            performance.now() -
+            requestStart
+          );
+
+
+        console.log("");
+        console.log(
+          "🔄 Voice failover successful"
+        );
+
+        console.log(
+          "Provider:",
+          result.provider
+        );
+
+        console.log(
+          "Model:",
+          result.model
+        );
+
+        console.log(
+          "AI latency:",
+          result.latencyMs,
+          "ms"
+        );
+
+        console.log(
+          "Total latency:",
+          totalLatencyMs,
+          "ms"
+        );
+
+
+        return NextResponse.json({
+
+          success:
+            true,
+
+          answer:
+            result.answer,
+
+          provider:
+            result.provider,
+
+          model:
+            result.model,
+
+          aiLatencyMs:
+            result.latencyMs,
+
+          totalLatencyMs,
+
+          fallback:
+            true,
+
+          fallbackReason:
+            reason,
+
+          targetMs:
+            2500,
+
+          targetStatus:
+            totalLatencyMs <= 2500
+              ? "PASS"
+              : "ABOVE_TARGET",
+
+        });
+
+      } catch (
+        circuitError: any
+      ) {
+
+        const circuitReason =
+          circuitError?.message ||
+          "CIRCUIT unavailable.";
+
+
+        console.error("");
+        console.error(
+          "======================================"
+        );
+
+        console.error(
+          "❌ VOICE AI FAILED"
+        );
+
+        console.error(
+          "======================================"
+        );
+
+        console.error(
+          "Ollama:",
+          reason
+        );
+
+        console.error(
+          "CIRCUIT:",
+          circuitReason
+        );
+
+
+        return NextResponse.json(
+
+          {
+
+            success:
+              false,
+
+            error:
+              `Voice AI unavailable. Ollama: ${reason}. CIRCUIT: ${circuitReason}`,
+
+            provider:
+              "Unavailable",
+
+            model:
+              "None",
+
+            fallback:
+              true,
+
+            fallbackReason:
+              reason,
+
+          },
+
+          {
+            status:
+              503,
+          }
+
+        );
+
+      }
+
+    }
+
+  } catch (
+    error: any
+  ) {
+
+    console.error(
+      "❌ VOICE API ERROR:",
+      error
+    );
+
+
+    return NextResponse.json(
+
+      {
+
+        success:
+          false,
+
+        error:
+          error?.message ||
+          "Voice AI failed.",
+
+      },
+
+      {
+        status:
+          500,
+      }
+
+    );
+
+  }
+
+}

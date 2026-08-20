@@ -5,46 +5,24 @@ import RuntimeTelemetry
 
 import { useState } from "react";
 
-import DashboardHeader
-  from "@/components/ai/DashboardHeader";
+import DashboardHeader from "@/components/ai/DashboardHeader";
+import RuntimeCard from "@/components/ai/RuntimeCard";
+import HealthCard from "@/components/ai/HealthCard";
+import MetricsCard from "@/components/ai/MetricsCard";
 
-import RuntimeCard
-  from "@/components/ai/RuntimeCard";
+import PromptBox from "@/components/workspace/PromptBox";
+import MarkdownViewer from "@/components/workspace/MarkdownViewer";
+import WorkspaceTabs from "@/components/workspace/WorkspaceTabs";
+import EvaluationPanel from "@/components/workspace/EvaluationPanel";
 
-import HealthCard
-  from "@/components/ai/HealthCard";
-
-import MetricsCard
-  from "@/components/ai/MetricsCard";
-
-import PromptBox
-  from "@/components/workspace/PromptBox";
-
-import MarkdownViewer
-  from "@/components/workspace/MarkdownViewer";
-
-import WorkspaceTabs
-  from "@/components/workspace/WorkspaceTabs";
-
-import VoiceWorkspace
-  from "@/components/workspace/VoiceWorkspace";
-
-import EvaluationPanel
-  from "@/components/workspace/EvaluationPanel";
-
-import ResearchDashboard
-  from "@/components/research/ResearchDashboard";
-
-import EdgeTelemetry
-  from "@/components/research/EdgeTelemetry";
-
+import ResearchDashboard from "@/components/research/ResearchDashboard";
+import EdgeTelemetry from "@/components/research/EdgeTelemetry";
 
 type WorkspaceView =
   | "teaching"
   | "analytics"
   | "metrics"
   | "evaluation";
-
 
 export default function WorkspacePage() {
 
@@ -72,20 +50,11 @@ export default function WorkspacePage() {
   const [teacher, setTeacher] =
     useState("");
 
-
-  // ============================================================
-  // RUNTIME
-  // ============================================================
-
-  const [runtime, setRuntime] =
-    useState<any>(null);
-
+    const [runtime, setRuntime] =
+  useState<any>(null);
 
   // ============================================================
   // CONTENT TAB
-  //
-  // IMPORTANT:
-  // Voice is now a first-class workspace tab.
   // ============================================================
 
   const [activeContentTab, setActiveContentTab] =
@@ -94,30 +63,14 @@ export default function WorkspacePage() {
 
   return (
 
-    <main
-      className="
-        min-h-screen
-        bg-slate-900
-        text-white
-      "
-    >
+    <main className="min-h-screen bg-slate-900 text-white">
 
       {/* ====================================================== */}
       {/* MAIN CONTENT                                           */}
       {/* ====================================================== */}
 
-      <section
-        className="
-          mx-auto
-          min-h-screen
-          max-w-[1800px]
-          overflow-y-auto
-          px-6
-          py-8
-          lg:px-10
-          lg:py-10
-        "
-      >
+      <section className="mx-auto min-h-screen max-w-[1800px] overflow-y-auto px-6 py-8 lg:px-10 lg:py-10">
+
 
         {/* ==================================================== */}
         {/* SRIMATHY HEADER                                      */}
@@ -130,13 +83,7 @@ export default function WorkspacePage() {
         {/* PRIMARY WORKSPACE NAVIGATION                         */}
         {/* ==================================================== */}
 
-        <div
-          className="
-            mt-8
-            border-b
-            border-slate-800
-          "
-        >
+        <div className="mt-8 border-b border-slate-800">
 
           <div className="flex gap-8">
 
@@ -150,14 +97,9 @@ export default function WorkspacePage() {
                 setView("teaching")
               }
               className={`
-                relative
-                px-2
-                pb-4
-                text-lg
-                font-semibold
-                transition-all
-                duration-200
-
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
                 ${
                   view === "teaching"
                     ? "text-cyan-400"
@@ -196,14 +138,9 @@ export default function WorkspacePage() {
                 setView("analytics")
               }
               className={`
-                relative
-                px-2
-                pb-4
-                text-lg
-                font-semibold
-                transition-all
-                duration-200
-
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
                 ${
                   view === "analytics"
                     ? "text-cyan-400"
@@ -242,14 +179,9 @@ export default function WorkspacePage() {
                 setView("metrics")
               }
               className={`
-                relative
-                px-2
-                pb-4
-                text-lg
-                font-semibold
-                transition-all
-                duration-200
-
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
                 ${
                   view === "metrics"
                     ? "text-cyan-400"
@@ -277,9 +209,8 @@ export default function WorkspacePage() {
 
             </button>
 
-
             {/* ------------------------------------------------ */}
-            {/* EVALUATION                                       */}
+            {/* EVALUATION                                      */}
             {/* ------------------------------------------------ */}
 
             <button
@@ -288,14 +219,9 @@ export default function WorkspacePage() {
                 setView("evaluation")
               }
               className={`
-                relative
-                px-2
-                pb-4
-                text-lg
-                font-semibold
-                transition-all
-                duration-200
-
+                relative px-2 pb-4
+                text-lg font-semibold
+                transition-all duration-200
                 ${
                   view === "evaluation"
                     ? "text-cyan-400"
@@ -307,7 +233,6 @@ export default function WorkspacePage() {
               🧪 Evaluation
 
               {view === "evaluation" && (
-
                 <span
                   className="
                     absolute
@@ -318,7 +243,6 @@ export default function WorkspacePage() {
                     bg-cyan-400
                   "
                 />
-
               )}
 
             </button>
@@ -329,7 +253,9 @@ export default function WorkspacePage() {
 
 
         {/* ==================================================== */}
+        {/* ==================================================== */}
         {/* TEACHING WORKSPACE                                   */}
+        {/* ==================================================== */}
         {/* ==================================================== */}
 
         {view === "teaching" && (
@@ -342,24 +268,17 @@ export default function WorkspacePage() {
 
             <div className="mb-6">
 
-              <h2
-                className="
-                  text-3xl
-                  font-bold
-                  text-white
-                "
-              >
+              <h2 className="text-3xl font-bold text-white">
+
                 🎓 Teaching Workspace
+
               </h2>
 
-              <p
-                className="
-                  mt-2
-                  text-slate-400
-                "
-              >
+              <p className="mt-2 text-slate-400">
+
                 Generate curriculum-aligned learning
                 content using the local multi-agent system.
+
               </p>
 
             </div>
@@ -370,21 +289,10 @@ export default function WorkspacePage() {
             {/* ------------------------------------------------ */}
 
             <PromptBox
-              onLessonGenerated={
-                setLesson
-              }
-
-              onWorksheetGenerated={
-                setWorksheet
-              }
-
-              onQuizGenerated={
-                setQuiz
-              }
-
-              onTeacherGenerated={
-                setTeacher
-              }
+              onLessonGenerated={setLesson}
+              onWorksheetGenerated={setWorksheet}
+              onQuizGenerated={setQuiz}
+              onTeacherGenerated={setTeacher}
             />
 
 
@@ -395,21 +303,16 @@ export default function WorkspacePage() {
             <div className="mt-8">
 
               <WorkspaceTabs
-                activeTab={
-                  activeContentTab
-                }
-
-                onTabChange={
-                  setActiveContentTab
-                }
+                activeTab={activeContentTab}
+                onTabChange={setActiveContentTab}
               />
 
             </div>
 
 
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
             {/* LESSON                                           */}
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
 
             {activeContentTab === "Lesson" &&
               lesson && (
@@ -425,9 +328,9 @@ export default function WorkspacePage() {
               )}
 
 
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
             {/* WORKSHEET                                        */}
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
 
             {activeContentTab === "Worksheet" &&
               worksheet && (
@@ -443,9 +346,9 @@ export default function WorkspacePage() {
               )}
 
 
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
             {/* QUIZ                                             */}
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
 
             {activeContentTab === "Quiz" &&
               quiz && (
@@ -461,9 +364,9 @@ export default function WorkspacePage() {
               )}
 
 
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
             {/* TEACHER NOTES                                    */}
-            {/* ================================================= */}
+            {/* ------------------------------------------------ */}
 
             {activeContentTab === "Teacher Notes" &&
               teacher && (
@@ -479,32 +382,11 @@ export default function WorkspacePage() {
               )}
 
 
-            {/* ================================================= */}
-            {/* VOICE LAB                                        */}
-            {/* ================================================= */}
-
-            {(activeContentTab === "Voice" || activeContentTab === "🎙 Voice") && (
-
-              <div className="mt-8">
-
-                <VoiceWorkspace
-                  grade="5"
-                  subject="Mathematics"
-                  board="NCERT"
-                  book="Math Mela"
-                />
-
-              </div>
-
-            )}
-
-
             {/* ------------------------------------------------ */}
             {/* EMPTY STATE                                      */}
             {/* ------------------------------------------------ */}
 
-            {activeContentTab !== "Voice" &&
-              !lesson &&
+            {!lesson &&
               !worksheet &&
               !quiz &&
               !teacher && (
@@ -561,37 +443,40 @@ export default function WorkspacePage() {
 
 
         {/* ==================================================== */}
+        {/* ==================================================== */}
         {/* ANALYTICS                                           */}
+        {/* ==================================================== */}
         {/* ==================================================== */}
 
         {view === "analytics" && (
 
           <section className="mt-8">
 
+            {/* ------------------------------------------------ */}
+            {/* ANALYTICS HEADER                                 */}
+            {/* ------------------------------------------------ */}
+
             <div className="mb-6">
 
-              <h2
-                className="
-                  text-3xl
-                  font-bold
-                  text-white
-                "
-              >
+              <h2 className="text-3xl font-bold text-white">
+
                 📊 Research & Analytics
+
               </h2>
 
-              <p
-                className="
-                  mt-2
-                  text-slate-400
-                "
-              >
+              <p className="mt-2 text-slate-400">
+
                 Live experimental telemetry and deployment
                 comparison across local and cloud AI runtimes.
+
               </p>
 
             </div>
 
+
+            {/* ------------------------------------------------ */}
+            {/* RESEARCH DASHBOARD                               */}
+            {/* ------------------------------------------------ */}
 
             <ResearchDashboard />
 
@@ -601,33 +486,32 @@ export default function WorkspacePage() {
 
 
         {/* ==================================================== */}
+        {/* ==================================================== */}
         {/* AI METRICS                                          */}
+        {/* ==================================================== */}
         {/* ==================================================== */}
 
         {view === "metrics" && (
 
           <section className="mt-8">
 
+            {/* ------------------------------------------------ */}
+            {/* METRICS HEADER                                   */}
+            {/* ------------------------------------------------ */}
+
             <div className="mb-6">
 
-              <h2
-                className="
-                  text-3xl
-                  font-bold
-                  text-white
-                "
-              >
+              <h2 className="text-3xl font-bold text-white">
+
                 🤖 AI Runtime Metrics
+
               </h2>
 
-              <p
-                className="
-                  mt-2
-                  text-slate-400
-                "
-              >
+              <p className="mt-2 text-slate-400">
+
                 Live runtime health, model telemetry and
                 edge-resource measurements.
+
               </p>
 
             </div>
@@ -680,7 +564,9 @@ export default function WorkspacePage() {
 
 
         {/* ==================================================== */}
+        {/* ==================================================== */}
         {/* EVALUATION                                          */}
+        {/* ==================================================== */}
         {/* ==================================================== */}
 
         {view === "evaluation" && (
@@ -698,15 +584,7 @@ export default function WorkspacePage() {
         {/* FOOTER                                              */}
         {/* ==================================================== */}
 
-        <footer
-          className="
-            mt-16
-            border-t
-            border-slate-800
-            pt-6
-            pb-4
-          "
-        >
+        <footer className="mt-16 border-t border-slate-800 pt-6 pb-4">
 
           <div
             className="
@@ -737,6 +615,5 @@ export default function WorkspacePage() {
       </section>
 
     </main>
-
   );
 }

@@ -1,119 +1,343 @@
 import { AI_CONFIG } from "./config";
-import { OllamaProvider } from "./providers/ollama";
-import { CircuitProvider } from "./providers/circuit";
-import type { AIProvider } from "./types";
+
+import {
+  OllamaProvider,
+} from "./providers/ollama";
+
+import {
+  CircuitProvider,
+} from "./providers/circuit";
+
+import type {
+  AIProvider,
+  StructuredOutputFormat,
+} from "./types";
+
 
 export interface AIResponse {
-  provider: string;
-  response: string;
-  latency: number;
-  fallback: boolean;
+
+  provider:
+    string;
+
+  response:
+    string;
+
+  latency:
+    number;
+
+  fallback:
+    boolean;
+
 }
 
+
 class AIManager {
-  private getProvider(name: string): AIProvider {
-    switch (name.toLowerCase()) {
+
+
+  private getProvider(
+    name: string
+  ): AIProvider {
+
+    switch (
+      name.toLowerCase()
+    ) {
+
       case "ollama":
         return OllamaProvider;
+
 
       case "circuit":
         return CircuitProvider;
 
+
       default:
-        throw new Error(`Unknown AI provider: ${name}`);
+        throw new Error(
+          `Unknown AI provider: ${name}`
+        );
+
     }
+
   }
 
-  private modelFor(provider: AIProvider): string {
+
+  private modelFor(
+    provider: AIProvider
+  ): string {
+
     return provider.name === "ollama"
+
       ? AI_CONFIG.ollama.model
+
       : AI_CONFIG.circuit.model;
+
   }
 
-  private runtimeFor(provider: AIProvider): string {
+
+  private runtimeFor(
+    provider: AIProvider
+  ): string {
+
     return provider.name === "ollama"
+
       ? "Local / Offline"
+
       : "Online / Cisco CIRCUIT";
+
   }
+
 
   private async execute(
-    provider: AIProvider,
-    system: string,
-    prompt: string,
-    fallback: boolean
+
+    provider:
+      AIProvider,
+
+    system:
+      string,
+
+    prompt:
+      string,
+
+    fallback:
+      boolean,
+
+    structuredFormat?:
+      StructuredOutputFormat
+
   ): Promise<AIResponse> {
-    const start = Date.now();
-    const model = this.modelFor(provider);
 
-    console.log("\n======================================");
-    console.log("🦙 SRIMATHY AI ENGINE");
-    console.log("======================================");
 
-    console.log("🧠 Model   :", model);
-    console.log("🔌 Provider:", provider.name);
-    console.log("📡 Runtime :", this.runtimeFor(provider));
-    console.log("🔄 Fallback:", fallback ? "YES" : "NO");
+    const start =
+      Date.now();
 
-    try {
-      const response = await provider.generate(
-        system,
-        prompt
+
+    const model =
+      this.modelFor(
+        provider
       );
 
-      const latency = Date.now() - start;
 
-      console.log("✅ Generation Successful");
-      console.log("Model      :", model);
-      console.log("Provider   :", provider.name);
-      console.log("Fallback   :", fallback ? "YES" : "NO");
-      console.log("Latency    :", `${latency} ms`);
-      console.log("======================================\n");
+    console.log(
+      "\n======================================"
+    );
+
+    console.log(
+      "🦙 SRIMATHY AI ENGINE"
+    );
+
+    console.log(
+      "======================================"
+    );
+
+    console.log(
+      "🧠 Model   :",
+      model
+    );
+
+    console.log(
+      "🔌 Provider:",
+      provider.name
+    );
+
+    console.log(
+      "📡 Runtime :",
+      this.runtimeFor(
+        provider
+      )
+    );
+
+    console.log(
+      "🔄 Fallback:",
+      fallback
+        ? "YES"
+        : "NO"
+    );
+
+    console.log(
+      "📐 Structured:",
+      structuredFormat
+        ? "YES"
+        : "NO"
+    );
+
+
+    try {
+
+      const response =
+        await provider.generate(
+
+          system,
+
+          prompt,
+
+          structuredFormat
+
+        );
+
+
+      const latency =
+        Date.now() -
+        start;
+
+
+      /*
+       * Providers in the current project return
+       * an object containing response.
+       *
+       * Keep compatibility with older providers
+       * that may return a plain string.
+       */
+
+      const text =
+        typeof response === "string"
+
+          ? response
+
+          : response?.response ??
+            response?.text ??
+            "";
+
+
+      if (
+        !text
+      ) {
+
+        throw new Error(
+          `${provider.name} returned an empty response.`
+        );
+
+      }
+
+
+      console.log(
+        "✅ Generation Successful"
+      );
+
+      console.log(
+        "Model      :",
+        model
+      );
+
+      console.log(
+        "Provider   :",
+        provider.name
+      );
+
+      console.log(
+        "Fallback   :",
+        fallback
+          ? "YES"
+          : "NO"
+      );
+
+      console.log(
+        "Structured :",
+        structuredFormat
+          ? "YES"
+          : "NO"
+      );
+
+      console.log(
+        "Latency    :",
+        `${latency} ms`
+      );
+
+      console.log(
+        "======================================\n"
+      );
+
 
       return {
-        provider: provider.name,
-        response,
+
+        provider:
+          provider.name,
+
+        response:
+          text,
+
         latency,
+
         fallback,
+
       };
-    } catch (error) {
+
+    } catch (
+      error
+    ) {
+
       const message =
         error instanceof Error
+
           ? error.message
+
           : String(error);
+
 
       console.error(
         `❌ ${provider.name.toUpperCase()} generation failed:`,
         message
       );
 
+
       throw error;
+
     }
+
   }
 
+
   async generate(
-    system: string,
-    prompt: string
+
+    system:
+      string,
+
+    prompt:
+      string,
+
+    structuredFormat?:
+      StructuredOutputFormat
+
   ): Promise<AIResponse> {
+
 
     const primaryName =
       AI_CONFIG.primaryProvider;
 
+
     const fallbackName =
       AI_CONFIG.fallbackProvider;
 
+
     const primary =
-      this.getProvider(primaryName);
+      this.getProvider(
+        primaryName
+      );
+
 
     const fallback =
+
       fallbackName &&
+
       fallbackName.toLowerCase() !==
         primaryName.toLowerCase()
-        ? this.getProvider(fallbackName)
+
+        ? this.getProvider(
+            fallbackName
+          )
+
         : null;
 
-    console.log("\n======================================");
-    console.log("🚀 SRIMATHY PROVIDER ROUTER");
-    console.log("======================================");
+
+    console.log(
+      "\n======================================"
+    );
+
+    console.log(
+      "🚀 SRIMATHY PROVIDER ROUTER"
+    );
+
+    console.log(
+      "======================================"
+    );
 
     console.log(
       "Primary  :",
@@ -122,41 +346,83 @@ class AIManager {
 
     console.log(
       "Fallback :",
-      fallback?.name ?? "none"
+      fallback?.name ??
+      "none"
     );
 
-    console.log("======================================");
+    console.log(
+      "Structured:",
+      structuredFormat
+        ? "YES"
+        : "NO"
+    );
 
-    // --------------------------------------------------
-    // PRIMARY
-    // --------------------------------------------------
+    console.log(
+      "======================================"
+    );
+
+
+    /*
+     * ========================================================
+     * PRIMARY
+     * ========================================================
+     */
 
     try {
+
       return await this.execute(
+
         primary,
+
         system,
+
         prompt,
-        false
+
+        false,
+
+        structuredFormat
+
       );
 
-    } catch (primaryError) {
+    } catch (
+      primaryError
+    ) {
+
 
       const primaryMessage =
         primaryError instanceof Error
+
           ? primaryError.message
+
           : String(primaryError);
 
-      // --------------------------------------------------
-      // FALLBACK
-      // --------------------------------------------------
 
-      if (!fallback) {
+      /*
+       * ======================================================
+       * FALLBACK
+       * ======================================================
+       */
+
+      if (
+        !fallback
+      ) {
+
         throw primaryError;
+
       }
 
-      console.warn("\n======================================");
-      console.warn("🔄 SRIMATHY PROVIDER FAILOVER");
-      console.warn("======================================");
+
+      console.warn(
+        "\n======================================"
+      );
+
+      console.warn(
+        "🔄 SRIMATHY PROVIDER FAILOVER"
+      );
+
+      console.warn(
+        "======================================"
+      );
 
       console.warn(
         "Primary Provider :",
@@ -177,30 +443,50 @@ class AIManager {
         fallback.name
       );
 
-      console.warn("======================================");
+      console.warn(
+        "======================================"
+      );
+
 
       try {
 
         const result =
           await this.execute(
+
             fallback,
+
             system,
+
             prompt,
-            true
+
+            true,
+
+            structuredFormat
+
           );
+
 
         console.log(
           "🔄 Failover successful"
         );
 
+
         return result;
 
-      } catch (fallbackError) {
+      } catch (
+        fallbackError
+      ) {
+
 
         const fallbackMessage =
           fallbackError instanceof Error
+
             ? fallbackError.message
-            : String(fallbackError);
+
+            : String(
+                fallbackError
+              );
+
 
         console.error(
           "\n======================================"
@@ -230,15 +516,21 @@ class AIManager {
           "======================================"
         );
 
+
         throw new Error(
           `AI generation failed. ` +
           `${primary.name}: ${primaryMessage}. ` +
           `${fallback.name}: ${fallbackMessage}.`
         );
+
       }
+
     }
+
   }
+
 }
+
 
 export const AI =
   new AIManager();

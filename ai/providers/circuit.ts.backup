@@ -1,178 +1,460 @@
-import { AIProvider } from "../types";
-import { AI_CONFIG } from "../config";
+import type { AIProvider } from "../types";
 
-export interface CircuitMetrics {
-  model: string;
-  latencyMs: number;
-}
+const CIRCUIT_URL =
+  process.env.CIRCUIT_URL || "";
 
-export const CircuitProvider:
-  AIProvider & {
-    lastMetrics?: CircuitMetrics;
-  } = {
+const CIRCUIT_MODEL =
+  process.env.CIRCUIT_MODEL ||
+  "gemini-3.1-flash-lite";
 
-  name: "circuit",
+const CIRCUIT_APP_KEY =
+  process.env.CIRCUIT_APP_KEY || "";
 
-  lastMetrics: undefined,
+const CIRCUIT_CLIENT_ID =
+  process.env.CIRCUIT_CLIENT_ID || "";
 
-  async health() {
-    return Boolean(
-      process.env.CIRCUIT_URL &&
-      process.env.CIRCUIT_API_KEY &&
-      process.env.CIRCUIT_APP_KEY &&
-      process.env.CIRCUIT_MODEL
-    );
-  },
+const CIRCUIT_CLIENT_SECRET =
+  process.env.CIRCUIT_CLIENT_SECRET || "";
 
-  async generate(
-    system,
-    prompt
+const CIRCUIT_TOKEN_URL =
+  process.env.CIRCUIT_TOKEN_URL ||
+  "https://id.cisco.com/oauth2/default/v1/token";
+
+
+type TokenCache = {
+  accessToken: string;
+  expiresAt: number;
+};
+
+
+let tokenCache:
+  TokenCache | null = null;
+
+
+/**
+ * Obtain a fresh Cisco OAuth access token.
+ *
+ * Cisco uses the OAuth2 client_credentials flow.
+ */
+async function getCircuitAccessToken(): Promise<string> {
+
+  const now =
+    Date.now();
+
+
+  /*
+   * Keep a 60-second safety buffer so we don't
+   * start a generation with a token that is about
+   * to expire.
+   */
+  if (
+    tokenCache &&
+    now <
+      tokenCache.expiresAt - 60_000
   ) {
 
-    const url =
-      process.env.CIRCUIT_URL ??
-      AI_CONFIG.circuit.endpoint;
+    return tokenCache.accessToken;
 
-    const apiKey =
-      process.env.CIRCUIT_API_KEY;
+  }
 
-    const appKey =
-      process.env.CIRCUIT_APP_KEY;
 
-    const model =
-      process.env.CIRCUIT_MODEL ??
-      AI_CONFIG.circuit.model;
+  if (
+    !CIRCUIT_CLIENT_ID ||
+    !CIRCUIT_CLIENT_SECRET
+  ) {
 
-    if (
-      !url ||
-      !apiKey ||
-      !appKey ||
-      !model
-    ) {
-      throw new Error(
-        "CIRCUIT configuration is incomplete. " +
-        "Check CIRCUIT_URL, CIRCUIT_API_KEY, " +
-        "CIRCUIT_APP_KEY and CIRCUIT_MODEL."
-      );
-    }
+    throw new Error(
+      "CIRCUIT_CLIENT_ID or CIRCUIT_CLIENT_SECRET is missing."
+    );
 
-    const start =
-      performance.now();
+  }
 
-    const response =
-      await fetch(
-        url,
-        {
-          method: "POST",
 
-          headers: {
-            "Content-Type":
-              "application/json",
+  console.log(
+    "🔐 Requesting fresh Cisco CIRCUIT access token..."
+  );
 
-            "Accept":
-              "application/json",
 
-            "api-key":
-              apiKey,
-          },
+  const body =
+    new URLSearchParams({
 
-          body: JSON.stringify({
+      grant_type:
+        "client_credentials",
+
+      client_id:
+        CIRCUIT_CLIENT_ID,
+
+      client_secret:
+        CIRCUIT_CLIENT_SECRET,
+
+    });
+
+
+  const response =
+    await fetch(
+      CIRCUIT_TOKEN_URL,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+
+          "Accept":
+            "application/json",
+        },
+
+        body:
+          body.toString(),
+      }
+    );
+
+
+  const raw =
+    await response.text();
+
+
+  let data: any = {};
+
+  try {
+
+    data =
+      JSON.parse(raw);
+
+  } catch {
+
+    throw new Error(
+      `CIRCUIT token endpoint returned non-JSON response: ${raw.slice(0, 300)}`
+    );
+
+  }
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      `CIRCUIT token request failed (${response.status}): ${
+        data?.error_description ??
+        data?.error ??
+        raw
+      }`
+    );
+
+  }
+
+
+  const accessToken =
+    data?.access_token;
+
+
+  const expiresIn =
+    Number(
+      data?.expires_in ??
+      3600
+    );
+
+
+  if (
+    !accessToken
+  ) {
+
+    throw new Error(
+      "CIRCUIT token response did not contain access_token."
+    );
+
+  }
+
+
+  tokenCache = {
+
+    accessToken,
+
+    expiresAt:
+      Date.now() +
+      expiresIn * 1000,
+
+  };
+
+
+  console.log(
+    "✅ Cisco CIRCUIT access token acquired."
+  );
+
+  console.log(
+    `⏳ Token lifetime: ${expiresIn}s`
+  );
+
+
+  return accessToken;
+
+}
+
+
+/**
+ * Execute a CIRCUIT chat completion.
+ */
+async function generateWithCircuit(
+  prompt: string
+): Promise<{
+  content: string;
+  latencyMs: number;
+}> {
+
+  const start =
+    performance.now();
+
+
+  let accessToken =
+    await getCircuitAccessToken();
+
+
+  async function makeRequest(
+    token: string
+  ): Promise<Response> {
+
+    return fetch(
+      CIRCUIT_URL,
+      {
+        method: "POST",
+
+        headers: {
+
+          "Content-Type":
+            "application/json",
+
+          "Accept":
+            "application/json",
+
+          /*
+           * IMPORTANT:
+           *
+           * CIRCUIT expects the OAuth access token
+           * in the api-key header.
+           */
+          "api-key":
+            token,
+
+        },
+
+        body:
+          JSON.stringify({
 
             messages: [
+
               {
-                role: "system",
-                content: system,
+                role:
+                  "system",
+
+                content:
+                  "You are an educational assistant. Explain concepts clearly for school students.",
               },
 
               {
-                role: "user",
-                content: prompt,
+                role:
+                  "user",
+
+                content:
+                  prompt,
               },
+
             ],
 
-            user: JSON.stringify({
-              appkey: appKey,
-            }),
+            /*
+             * Cisco CIRCUIT expects the appkey
+             * inside the user JSON field.
+             */
+            user:
+              JSON.stringify({
+                appkey:
+                  CIRCUIT_APP_KEY,
+              }),
 
             stop: [
-              "<|im_end|>"
+              "<|im_end|>",
             ],
+
+            temperature:
+              0.2,
+
           }),
-        }
+      }
+    );
+
+  }
+
+
+  let response =
+    await makeRequest(
+      accessToken
+    );
+
+
+  /*
+   * If the token has expired between the
+   * cache check and the actual request,
+   * invalidate it and retry exactly once.
+   */
+  if (
+    response.status === 401 ||
+    response.status === 403
+  ) {
+
+    console.warn(
+      "⚠ CIRCUIT token rejected. Refreshing token..."
+    );
+
+
+    tokenCache =
+      null;
+
+
+    accessToken =
+      await getCircuitAccessToken();
+
+
+    response =
+      await makeRequest(
+        accessToken
       );
 
-    const latencyMs =
+  }
+
+
+  const raw =
+    await response.text();
+
+
+  if (
+    !response.ok
+  ) {
+
+    throw new Error(
+      `CIRCUIT generation failed (${response.status}): ${raw.slice(0, 500)}`
+    );
+
+  }
+
+
+  let data: any = {};
+
+  try {
+
+    data =
+      JSON.parse(raw);
+
+  } catch {
+
+    throw new Error(
+      `CIRCUIT returned invalid JSON: ${raw.slice(0, 300)}`
+    );
+
+  }
+
+
+  const content =
+    data?.choices?.[0]?.message?.content ??
+    "";
+
+
+  if (
+    !content
+  ) {
+
+    throw new Error(
+      "CIRCUIT returned an empty response."
+    );
+
+  }
+
+
+  return {
+
+    content,
+
+    latencyMs:
       Math.round(
-        performance.now() - start
-      );
+        performance.now() -
+        start
+      ),
 
-    const raw =
-      await response.text();
+  };
 
-    let data: any;
+}
 
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      data = {
-        raw,
-      };
-    }
 
-    if (!response.ok) {
-
-      console.error(
-        "======================================"
-      );
-
-      console.error(
-        "❌ CIRCUIT API ERROR"
-      );
-
-      console.error(
-        "HTTP Status:",
-        response.status
-      );
-
-      console.error(
-        JSON.stringify(
-          data,
-          null,
-          2
-        )
-      );
-
-      console.error(
-        "======================================"
-      );
-
-      const faultString =
-        data?.fault?.faultstring ??
-        data?.error?.message ??
-        data?.message ??
-        `HTTP ${response.status}`;
-
-      throw new Error(
-        `CIRCUIT request failed: ${faultString}`
-      );
-    }
-
-    const content =
-      data?.choices?.[0]?.message?.content ??
-      data?.choices?.[0]?.text ??
-      "";
-
-    if (!content) {
-      throw new Error(
-        "CIRCUIT returned no response content."
-      );
-    }
-
-    this.lastMetrics = {
-      model,
-      latencyMs,
+/**
+ * SRIMATHY CIRCUIT Provider
+ */
+export const CircuitProvider:
+  AIProvider & {
+    lastMetrics?: {
+      model: string;
+      latencyMs?: number;
+      fallback?: boolean;
     };
+  } = {
 
-    return content;
-  },
-};
+    name:
+      "circuit",
+
+    lastMetrics:
+      undefined,
+
+
+    async health() {
+
+      try {
+
+        await getCircuitAccessToken();
+
+        return true;
+
+      } catch {
+
+        return false;
+
+      }
+
+    },
+
+
+    async generate(
+      prompt: string
+    ) {
+
+      const result =
+        await generateWithCircuit(
+          prompt
+        );
+
+
+      this.lastMetrics = {
+
+        model:
+          CIRCUIT_MODEL,
+
+        latencyMs:
+          result.latencyMs,
+
+      };
+
+
+      return {
+
+        text:
+          result.content,
+
+        model:
+          CIRCUIT_MODEL,
+
+        provider:
+          "circuit",
+
+        latencyMs:
+          result.latencyMs,
+
+      };
+
+    },
+
+  };
