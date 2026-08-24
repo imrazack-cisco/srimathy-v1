@@ -1,0 +1,460 @@
+{
+  "generatedAt": "2026-08-20T12:55:43.406Z",
+  "benchmark": "curriculum-alignment",
+  "methodology": {
+    "description": "Deterministic comparison of SRIMATHY curriculum retrieval against explicit NCERT textbook benchmark expectations.",
+    "retrievalAccuracy": "Percentage of benchmark queries returning at least one retrieval result.",
+    "chapterAccuracy": "Percentage of benchmark queries where the expected chapter was present in retrieved results.",
+    "topicCoverage": "Percentage of expected curriculum topics found in retrieved context.",
+    "keywordCoverage": "Percentage of benchmark keywords found in retrieved context.",
+    "alignmentScore": "Weighted score: 40% chapter alignment + 35% topic coverage + 25% keyword coverage."
+  },
+  "benchmarkCases": [
+    {
+      "id": "g5-math-fractions",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain equivalent fractions and compare simple fractions.",
+      "expected": {
+        "chapter": "Fractions",
+        "topics": [
+          "fractions",
+          "equivalent fractions",
+          "comparing fractions"
+        ],
+        "keywords": [
+          "fraction",
+          "numerator",
+          "denominator",
+          "equivalent"
+        ]
+      }
+    },
+    {
+      "id": "g5-math-large-numbers",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Teach place value and reading large numbers to a Grade 5 student.",
+      "expected": {
+        "chapter": "Large Numbers",
+        "topics": [
+          "large numbers",
+          "place value",
+          "number system"
+        ],
+        "keywords": [
+          "place value",
+          "thousand",
+          "lakh",
+          "number"
+        ]
+      }
+    },
+    {
+      "id": "g5-math-decimals",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain decimals and how decimal numbers represent parts of a whole.",
+      "expected": {
+        "chapter": "Decimals",
+        "topics": [
+          "decimals",
+          "decimal numbers",
+          "parts of a whole"
+        ],
+        "keywords": [
+          "decimal",
+          "tenths",
+          "hundredths",
+          "place value"
+        ]
+      }
+    },
+    {
+      "id": "g5-math-multiplication",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain multiplication using repeated addition and multiplication facts.",
+      "expected": {
+        "chapter": "Multiplication",
+        "topics": [
+          "multiplication",
+          "repeated addition",
+          "multiplication facts"
+        ],
+        "keywords": [
+          "multiply",
+          "multiplication",
+          "product",
+          "groups"
+        ]
+      }
+    },
+    {
+      "id": "g5-math-division",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain division using equal sharing and grouping.",
+      "expected": {
+        "chapter": "Division",
+        "topics": [
+          "division",
+          "equal sharing",
+          "grouping"
+        ],
+        "keywords": [
+          "divide",
+          "division",
+          "quotient",
+          "equal"
+        ]
+      }
+    },
+    {
+      "id": "g5-science-plants",
+      "grade": "Grade 5",
+      "subject": "Science",
+      "query": "Explain how plants make food and why sunlight is important.",
+      "expected": {
+        "chapter": "Plants",
+        "topics": [
+          "plants",
+          "food",
+          "sunlight"
+        ],
+        "keywords": [
+          "plant",
+          "leaf",
+          "sunlight",
+          "food"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalCases": 6,
+    "retrievalSuccesses": 0,
+    "retrievalAccuracyPercent": 0,
+    "chapterMatches": 0,
+    "chapterAccuracyPercent": 0,
+    "averageTopicCoveragePercent": 0,
+    "averageKeywordCoveragePercent": 0,
+    "averageAlignmentScorePercent": 0,
+    "results": [
+      {
+        "id": "g5-math-fractions",
+        "grade": "Grade 5",
+        "subject": "Mathematics",
+        "query": "Explain equivalent fractions and compare simple fractions.",
+        "expectedChapter": "Fractions",
+        "expectedTopics": [
+          "fractions",
+          "equivalent fractions",
+          "comparing fractions"
+        ],
+        "expectedKeywords": [
+          "fraction",
+          "numerator",
+          "denominator",
+          "equivalent"
+        ],
+        "retrieved": false,
+        "retrievedCount": 0,
+        "bestRank": null,
+        "chapterMatch": false,
+        "topicCoverage": 0,
+        "keywordCoverage": 0,
+        "alignmentScore": 0,
+        "topResults": []
+      },
+      {
+        "id": "g5-math-large-numbers",
+        "grade": "Grade 5",
+        "subject": "Mathematics",
+        "query": "Teach place value and reading large numbers to a Grade 5 student.",
+        "expectedChapter": "Large Numbers",
+        "expectedTopics": [
+          "large numbers",
+          "place value",
+          "number system"
+        ],
+        "expectedKeywords": [
+          "place value",
+          "thousand",
+          "lakh",
+          "number"
+        ],
+        "retrieved": false,
+        "retrievedCount": 0,
+        "bestRank": null,
+        "chapterMatch": false,
+        "topicCoverage": 0,
+        "keywordCoverage": 0,
+        "alignmentScore": 0,
+        "topResults": []
+      },
+      {
+        "id": "g5-math-decimals",
+        "grade": "Grade 5",
+        "subject": "Mathematics",
+        "query": "Explain decimals and how decimal numbers represent parts of a whole.",
+        "expectedChapter": "Decimals",
+        "expectedTopics": [
+          "decimals",
+          "decimal numbers",
+          "parts of a whole"
+        ],
+        "expectedKeywords": [
+          "decimal",
+          "tenths",
+          "hundredths",
+          "place value"
+        ],
+        "retrieved": false,
+        "retrievedCount": 0,
+        "bestRank": null,
+        "chapterMatch": false,
+        "topicCoverage": 0,
+        "keywordCoverage": 0,
+        "alignmentScore": 0,
+        "topResults": []
+      },
+      {
+        "id": "g5-math-multiplication",
+        "grade": "Grade 5",
+        "subject": "Mathematics",
+        "query": "Explain multiplication using repeated addition and multiplication facts.",
+        "expectedChapter": "Multiplication",
+        "expectedTopics": [
+          "multiplication",
+          "repeated addition",
+          "multiplication facts"
+        ],
+        "expectedKeywords": [
+          "multiply",
+          "multiplication",
+          "product",
+          "groups"
+        ],
+        "retrieved": false,
+        "retrievedCount": 0,
+        "bestRank": null,
+        "chapterMatch": false,
+        "topicCoverage": 0,
+        "keywordCoverage": 0,
+        "alignmentScore": 0,
+        "topResults": []
+      },
+      {
+        "id": "g5-math-division",
+        "grade": "Grade 5",
+        "subject": "Mathematics",
+        "query": "Explain division using equal sharing and grouping.",
+        "expectedChapter": "Division",
+        "expectedTopics": [
+          "division",
+          "equal sharing",
+          "grouping"
+        ],
+        "expectedKeywords": [
+          "divide",
+          "division",
+          "quotient",
+          "equal"
+        ],
+        "retrieved": false,
+        "retrievedCount": 0,
+        "bestRank": null,
+        "chapterMatch": false,
+        "topicCoverage": 0,
+        "keywordCoverage": 0,
+        "alignmentScore": 0,
+        "topResults": []
+      },
+      {
+        "id": "g5-science-plants",
+        "grade": "Grade 5",
+        "subject": "Science",
+        "query": "Explain how plants make food and why sunlight is important.",
+        "expectedChapter": "Plants",
+        "expectedTopics": [
+          "plants",
+          "food",
+          "sunlight"
+        ],
+        "expectedKeywords": [
+          "plant",
+          "leaf",
+          "sunlight",
+          "food"
+        ],
+        "retrieved": false,
+        "retrievedCount": 0,
+        "bestRank": null,
+        "chapterMatch": false,
+        "topicCoverage": 0,
+        "keywordCoverage": 0,
+        "alignmentScore": 0,
+        "topResults": []
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "g5-math-fractions",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain equivalent fractions and compare simple fractions.",
+      "expectedChapter": "Fractions",
+      "expectedTopics": [
+        "fractions",
+        "equivalent fractions",
+        "comparing fractions"
+      ],
+      "expectedKeywords": [
+        "fraction",
+        "numerator",
+        "denominator",
+        "equivalent"
+      ],
+      "retrieved": false,
+      "retrievedCount": 0,
+      "bestRank": null,
+      "chapterMatch": false,
+      "topicCoverage": 0,
+      "keywordCoverage": 0,
+      "alignmentScore": 0,
+      "topResults": []
+    },
+    {
+      "id": "g5-math-large-numbers",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Teach place value and reading large numbers to a Grade 5 student.",
+      "expectedChapter": "Large Numbers",
+      "expectedTopics": [
+        "large numbers",
+        "place value",
+        "number system"
+      ],
+      "expectedKeywords": [
+        "place value",
+        "thousand",
+        "lakh",
+        "number"
+      ],
+      "retrieved": false,
+      "retrievedCount": 0,
+      "bestRank": null,
+      "chapterMatch": false,
+      "topicCoverage": 0,
+      "keywordCoverage": 0,
+      "alignmentScore": 0,
+      "topResults": []
+    },
+    {
+      "id": "g5-math-decimals",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain decimals and how decimal numbers represent parts of a whole.",
+      "expectedChapter": "Decimals",
+      "expectedTopics": [
+        "decimals",
+        "decimal numbers",
+        "parts of a whole"
+      ],
+      "expectedKeywords": [
+        "decimal",
+        "tenths",
+        "hundredths",
+        "place value"
+      ],
+      "retrieved": false,
+      "retrievedCount": 0,
+      "bestRank": null,
+      "chapterMatch": false,
+      "topicCoverage": 0,
+      "keywordCoverage": 0,
+      "alignmentScore": 0,
+      "topResults": []
+    },
+    {
+      "id": "g5-math-multiplication",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain multiplication using repeated addition and multiplication facts.",
+      "expectedChapter": "Multiplication",
+      "expectedTopics": [
+        "multiplication",
+        "repeated addition",
+        "multiplication facts"
+      ],
+      "expectedKeywords": [
+        "multiply",
+        "multiplication",
+        "product",
+        "groups"
+      ],
+      "retrieved": false,
+      "retrievedCount": 0,
+      "bestRank": null,
+      "chapterMatch": false,
+      "topicCoverage": 0,
+      "keywordCoverage": 0,
+      "alignmentScore": 0,
+      "topResults": []
+    },
+    {
+      "id": "g5-math-division",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "query": "Explain division using equal sharing and grouping.",
+      "expectedChapter": "Division",
+      "expectedTopics": [
+        "division",
+        "equal sharing",
+        "grouping"
+      ],
+      "expectedKeywords": [
+        "divide",
+        "division",
+        "quotient",
+        "equal"
+      ],
+      "retrieved": false,
+      "retrievedCount": 0,
+      "bestRank": null,
+      "chapterMatch": false,
+      "topicCoverage": 0,
+      "keywordCoverage": 0,
+      "alignmentScore": 0,
+      "topResults": []
+    },
+    {
+      "id": "g5-science-plants",
+      "grade": "Grade 5",
+      "subject": "Science",
+      "query": "Explain how plants make food and why sunlight is important.",
+      "expectedChapter": "Plants",
+      "expectedTopics": [
+        "plants",
+        "food",
+        "sunlight"
+      ],
+      "expectedKeywords": [
+        "plant",
+        "leaf",
+        "sunlight",
+        "food"
+      ],
+      "retrieved": false,
+      "retrievedCount": 0,
+      "bestRank": null,
+      "chapterMatch": false,
+      "topicCoverage": 0,
+      "keywordCoverage": 0,
+      "alignmentScore": 0,
+      "topResults": []
+    }
+  ]
+}

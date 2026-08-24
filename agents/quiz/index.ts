@@ -1,22 +1,51 @@
 import { AI } from "@/ai";
-import { quizPrompt } from "@/lib/prompts";
 
-import { QuizSchema } from "@/lib/validation/agentSchemas";
-import { extractJson } from "@/lib/validation/extractJson";
-import { validateAgentOutput } from "@/lib/validation/validateAgentOutput";
+import {
+  quizPrompt,
+} from "@/lib/prompts";
+
+import {
+  QuizSchema,
+  QuizOutput,
+  QuizJSONSchema,
+} from "@/lib/validation/agentSchemas";
+
+import {
+  extractJson,
+} from "@/lib/validation/extractJson";
+
+import {
+  validateAgentOutput,
+} from "@/lib/validation/validateAgentOutput";
+
 
 export interface QuizRequest {
   topic: string;
 }
 
+
 export interface QuizResponse {
-  content: string;
-  structured: boolean;
-  validationAttempts: number;
+
+  content:
+    string;
+
+  structured:
+    boolean;
+
+  validationAttempts:
+    number;
+
 }
 
+
+/**
+ * ============================================================
+ * CONVERT VALIDATED QUIZ → CLASSROOM MARKDOWN
+ * ============================================================
+ */
+
 function quizToMarkdown(
-  quiz: any
+  quiz: QuizOutput
 ): string {
 
   return `
@@ -26,10 +55,18 @@ function quizToMarkdown(
 
 ${quiz.multipleChoice
   .map(
-    (item: any, index: number) => `
+    (
+      item,
+      index
+    ) => `
 ### ${index + 1}. ${item.question}
 
-${item.options.join("\n")}
+${item.options
+  .map(
+    option =>
+      `- ${option}`
+  )
+  .join("\n")}
 
 `
   )
@@ -39,7 +76,10 @@ ${item.options.join("\n")}
 
 ${quiz.shortAnswer
   .map(
-    (item: any, index: number) =>
+    (
+      item,
+      index
+    ) =>
       `### ${index + 1}. ${item.question}`
   )
   .join("\n\n")}
@@ -48,7 +88,10 @@ ${quiz.shortAnswer
 
 ${quiz.challenge
   .map(
-    (item: any, index: number) =>
+    (
+      item,
+      index
+    ) =>
       `### ${index + 1}. ${item.question}`
   )
   .join("\n\n")}
@@ -59,7 +102,10 @@ ${quiz.challenge
 
 ${quiz.multipleChoice
   .map(
-    (item: any, index: number) =>
+    (
+      item,
+      index
+    ) =>
       `${index + 1}. **${item.answer}** — ${item.explanation}`
   )
   .join("\n\n")}
@@ -68,7 +114,10 @@ ${quiz.multipleChoice
 
 ${quiz.shortAnswer
   .map(
-    (item: any, index: number) =>
+    (
+      item,
+      index
+    ) =>
       `${index + 1}. ${item.answer}`
   )
   .join("\n\n")}
@@ -77,20 +126,76 @@ ${quiz.shortAnswer
 
 ${quiz.challenge
   .map(
-    (item: any, index: number) =>
+    (
+      item,
+      index
+    ) =>
       `${index + 1}. ${item.answer}`
   )
   .join("\n\n")}
 `.trim();
+
 }
+
+
+/**
+ * ============================================================
+ * QUIZ AGENT
+ * ============================================================
+ *
+ * Generation pipeline:
+ *
+ * QuizJSONSchema
+ *       ↓
+ * Ollama native structured decoding
+ *       ↓
+ * JSON
+ *       ↓
+ * extractJson()
+ *       ↓
+ * Zod QuizSchema
+ *       ↓
+ * Classroom Markdown
+ *
+ * There is intentionally NO unstructured fallback.
+ *
+ * A malformed SLM response must never reach the classroom
+ * renderer.
+ * ============================================================
+ */
 
 export async function quizAgent(
   request: QuizRequest
 ): Promise<QuizResponse> {
 
-  console.log("❓ Quiz Agent");
+  console.log(
+    "\n======================================"
+  );
 
-  let lastError = "";
+  console.log(
+    "❓ SRIMATHY QUIZ AGENT"
+  );
+
+  console.log(
+    "======================================"
+  );
+
+  console.log(
+    "🔒 Native Ollama structured decoding: ON"
+  );
+
+
+  let lastError =
+    "";
+
+
+  /*
+   * Maximum two deterministic attempts.
+   *
+   * Attempt 2 receives the validation failure so
+   * the model can correct the content while the
+   * Ollama JSON Schema constraint remains active.
+   */
 
   for (
     let attempt = 1;
@@ -98,11 +203,30 @@ export async function quizAgent(
     attempt++
   ) {
 
+    console.log(
+      `🧪 Quiz generation attempt ${attempt}`
+    );
+
+
     const prompt =
+
       attempt === 1
-        ? request.topic
+
+        ? `
+Generate a classroom quiz for:
+
+${request.topic}
+
+The response is constrained by a JSON Schema.
+
+Create useful Grade 5 appropriate questions.
+
+The response must satisfy the supplied schema.
+`
+
         : `
-The previous quiz response failed validation.
+The previous quiz generation failed deterministic
+schema validation.
 
 Validation error:
 
@@ -110,21 +234,54 @@ ${lastError}
 
 Generate the quiz again.
 
-Return ONLY valid JSON matching the required schema.
+The response is constrained by a JSON Schema.
+Correct the validation problem.
 
 Topic:
+
 ${request.topic}
 `;
 
-    const result = await AI.generate(
-      quizPrompt,
-      prompt
-    );
+
+    /*
+     * IMPORTANT:
+     *
+     * QuizJSONSchema is passed as the third argument.
+     *
+     * The AI manager passes it to Ollama's native
+     * `format` parameter.
+     */
+
+    const result =
+      await AI.generate(
+
+        quizPrompt,
+
+        prompt,
+
+        QuizJSONSchema
+
+      );
+
 
     try {
 
+      /*
+       * Extract the JSON returned by Ollama.
+       */
+
       const rawJson =
-        extractJson(result.response);
+        extractJson(
+          result.response
+        );
+
+
+      /*
+       * SECOND SAFETY LAYER:
+       *
+       * Validate the generated object using
+       * the Zod QuizSchema.
+       */
 
       const validation =
         validateAgentOutput(
@@ -132,63 +289,91 @@ ${request.topic}
           rawJson
         );
 
+
       if (
         validation.success &&
         validation.data
       ) {
 
         console.log(
-          `✅ Quiz schema validation passed on attempt ${attempt}`
+          `✅ Quiz schema validation PASSED on attempt ${attempt}`
         );
 
+        console.log(
+          "🔒 Classroom output contract: VALID"
+        );
+
+
         return {
+
           content:
             quizToMarkdown(
               validation.data
             ),
 
-          structured: true,
+          structured:
+            true,
 
           validationAttempts:
             attempt,
+
         };
+
       }
+
 
       lastError =
         validation.error ??
-        "Unknown schema validation error.";
+        "Unknown Quiz schema validation error.";
 
-    } catch (error) {
+
+      console.warn(
+        `⚠️ Quiz schema validation FAILED on attempt ${attempt}`
+      );
+
+      console.warn(
+        lastError
+      );
+
+    } catch (
+      error
+    ) {
 
       lastError =
         error instanceof Error
           ? error.message
           : "Invalid JSON returned by model.";
 
+
       console.warn(
-        `⚠️ Quiz validation attempt ${attempt} failed:`,
+        `⚠️ Quiz JSON parsing FAILED on attempt ${attempt}`
+      );
+
+      console.warn(
         lastError
       );
+
     }
+
   }
 
-  console.warn(
-    "⚠️ Quiz structured validation failed after retry."
+
+  /*
+   * HARD SAFETY BOUNDARY
+   *
+   * DO NOT fall back to an unstructured model response.
+   *
+   * Returning raw model output here would defeat the
+   * structured-output guarantee required by the project.
+   */
+
+  console.error(
+    "❌ Quiz structured output failed."
   );
 
-  const fallback =
-    await AI.generate(
-      quizPrompt,
-      `
-Create the quiz for:
 
-${request.topic}
-`
-    );
+  throw new Error(
+    `Quiz structured output validation failed after 2 attempts. ${lastError}`
+  );
 
-  return {
-    content: fallback.response,
-    structured: false,
-    validationAttempts: 2,
-  };
 }

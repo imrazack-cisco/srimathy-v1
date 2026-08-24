@@ -429,3 +429,145 @@ export const TeacherJSONSchema =
     },
 
   } as Record<string, unknown>;
+
+/**
+ * ============================================================
+ * QUIZ — NATIVE OLLAMA JSON SCHEMA
+ * ============================================================
+ */
+
+export const QuizJSONSchema =
+  {
+    type: "object",
+
+    additionalProperties: false,
+
+    required: [
+      "title",
+      "multipleChoice",
+      "shortAnswer",
+      "challenge",
+    ],
+
+    properties: {
+
+      title: {
+        type: "string",
+      },
+
+      multipleChoice: {
+
+        type: "array",
+
+        items: {
+
+          type: "object",
+
+          additionalProperties: false,
+
+          required: [
+            "question",
+            "options",
+            "answer",
+            "explanation",
+          ],
+
+          properties: {
+
+            question: {
+              type: "string",
+            },
+
+            options: {
+
+              type: "array",
+
+              items: {
+                type: "string",
+              },
+
+              minItems: 4,
+              maxItems: 4,
+
+            },
+
+            answer: {
+              type: "string",
+            },
+
+            explanation: {
+              type: "string",
+            },
+
+          },
+
+        },
+
+      },
+
+      shortAnswer: {
+
+        type: "array",
+
+        items: {
+
+          type: "object",
+
+          additionalProperties: false,
+
+          required: [
+            "question",
+            "answer",
+          ],
+
+          properties: {
+
+            question: {
+              type: "string",
+            },
+
+            answer: {
+              type: "string",
+            },
+
+          },
+
+        },
+
+      },
+
+      challenge: {
+
+        type: "array",
+
+        items: {
+
+          type: "object",
+
+          additionalProperties: false,
+
+          required: [
+            "question",
+            "answer",
+          ],
+
+          properties: {
+
+            question: {
+              type: "string",
+            },
+
+            answer: {
+              type: "string",
+            },
+
+          },
+
+        },
+
+      },
+
+    },
+
+  } as Record<string, unknown>;
+

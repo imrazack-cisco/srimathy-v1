@@ -1,0 +1,77 @@
+{
+  "benchmark": "ncert-curriculum-alignment-v1",
+  "source": "SRIMATHY NCERT knowledge base",
+  "description": "Gold-standard curriculum alignment cases for evaluating Curriculum Mapper against NCERT textbook metadata.",
+
+  "cases": [
+    {
+      "id": "fractions-01",
+      "query": "Teach Grade 5 students equivalent fractions and simple fraction concepts.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch10"]
+    },
+
+    {
+      "id": "maps-01",
+      "query": "Teach Grade 5 students maps, directions and locations.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch14"]
+    },
+
+    {
+      "id": "data-01",
+      "query": "Teach Grade 5 students representing and interpreting data using pictures.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch15"]
+    },
+
+    {
+      "id": "patterns-01",
+      "query": "Teach Grade 5 students shapes and mathematical patterns.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch07"]
+    },
+
+    {
+      "id": "time-01",
+      "query": "Teach Grade 5 students time, seconds and elapsed time.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch12"]
+    },
+
+    {
+      "id": "numbers-01",
+      "query": "Teach Grade 5 students large numbers, number patterns and travel distances.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch01"]
+    },
+
+    {
+      "id": "distance-01",
+      "query": "Teach Grade 5 students distance estimation and comparing far and near.",
+      "grade": "5",
+      "subject": "Mathematics",
+      "board": "NCERT",
+      "book": "Math Mela",
+      "expectedChapters": ["g5-ch05"]
+    }
+  ]
+}
